@@ -1,0 +1,4 @@
+[import a]
+
+set  ss, 'a'
+iadd ss, 5

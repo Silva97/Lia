@@ -6,13 +6,13 @@
 
 test_t test_lexer_code(void)
 {
-  /* [import a]
+  /* [import "abc"]
    *
    * set  ss, 'a'
    * iadd ss, 5
    */
   const int seqtype[] = {
-    TK_OPENBRACKET, TK_ID, TK_ID, TK_CLOSEBRACKET, TK_SEPARATOR,
+    TK_OPENBRACKET, TK_ID, TK_STRING, TK_CLOSEBRACKET, TK_SEPARATOR,
     TK_SEPARATOR,
     TK_ID, TK_ID, TK_COMMA, TK_CHAR, TK_SEPARATOR,
     TK_ID, TK_ID, TK_COMMA, TK_IMMEDIATE, TK_EOF

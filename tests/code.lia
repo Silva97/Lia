@@ -1,4 +1,4 @@
-[import a]
+[import "abc"]
 
 set  ss, 'a'
 iadd ss, 5

@@ -226,7 +226,14 @@ token_t *lia_lexer(char *filename, FILE *input)
 
           this->text[1] = ch;
 
-          for (int i = 2; i < TKMAX-1; i++) {
+          for (int i = 2;; i++) {
+            if (i >= TKMAX) {
+              lia_error(filename, this->line, this->column,
+                "Maximum size of a token is %d characters", TKMAX-1);
+              tkfree(first);
+              return NULL;
+            }
+            
             ch = getc(input);
 
             if ( !filter(ch) )

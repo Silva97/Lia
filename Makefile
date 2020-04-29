@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-std=c11 -I "include"
-SRC=src/lia/lexer.c
+SRC=src/lia/*.c
 
 all:
 	$(CC) $(CFLAGS) $(SRC) src/main.c -o lia

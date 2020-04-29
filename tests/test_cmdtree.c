@@ -73,7 +73,8 @@ test_t test_cmdtree(void)
     METRIC_TEST_FAIL("Element not match correct");
   
   cmd_print(find);
-
+  tree_free(tree);
+  
   METRIC_TEST_OK("");
 }
 

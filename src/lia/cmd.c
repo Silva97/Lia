@@ -86,7 +86,7 @@ cmd_t *tree_find(cmd_t *root, unsigned long int hashname)
  * @return cmd_t*  Pointer to the new element if all ok
  * @return NULL    If the element already exists
  */
-cmd_t *lia_cmd_new(cmd_t *tree, char *name, const cmd_arg_t *args, char *body)
+cmd_t *lia_cmd_new(cmd_t *tree, char *name, cmd_arg_t *args, char *body)
 {
   unsigned long int hashname = hash(name);
   cmd_t *new = tree_insert(tree, hashname);

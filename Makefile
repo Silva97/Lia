@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-std=c11 -I "include"
-SRC=src/lia/*.c
+SRC=src/tree.c src/lia/*.c
 
 all:
 	$(CC) $(CFLAGS) $(SRC) src/main.c -o lia

@@ -2,6 +2,7 @@
 #define _LIA_CMD_H
 
 #include <inttypes.h>
+#include "tree.h"
 
 #define CMD_ARGC 3
 #define CMDT cmd_arg_t[CMD_ARGC]   /**< For use in compound literals */
@@ -20,11 +21,8 @@ typedef struct cmd_arg {
 
 /** Binary tree for commands */
 typedef struct cmd {
-  struct cmd *left;
-  struct cmd *right;
+  EXTENDS_TREE(cmd);
 
-  unsigned long int hashname;
-  char *name;
   cmd_arg_t args[CMD_ARGC];
   char *body;
 } cmd_t;
@@ -37,9 +35,6 @@ typedef union operand {
 
 
 unsigned long int hash(unsigned char *str);
-cmd_t *tree_insert(cmd_t *root, unsigned long int hashname);
-cmd_t *tree_find(cmd_t *root, unsigned long int hashname);
-void tree_free(cmd_t *root);
 cmd_t *lia_cmd_new(cmd_t *tree, char *name, cmd_arg_t *args, char *body);
 int lia_cmd_compile(FILE *output, cmd_t *cmd, operand_t *ops);
 

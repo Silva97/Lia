@@ -1,7 +1,7 @@
 /**
- * @file    cmd.c
+ * @file    cmd_new.c
  * @author  Luiz Felipe (felipe.silva337@yahoo.com)
- * @brief   Commands to Lia language
+ * @brief   Commands' create system to Lia language
  * @version 0.1
  * @date    2020-04-27
  * 
@@ -74,6 +74,25 @@ cmd_t *tree_find(cmd_t *root, unsigned long int hashname)
     return tree_find(root->right, hashname);
   
   return tree_find(root->left, hashname);
+}
+
+/**
+ * @brief Free all the tree
+ * 
+ * @param root  The root element
+ */
+void tree_free(cmd_t *root)
+{
+  if ( !root )
+    return;
+  
+  if (root->left)
+    tree_free(root->left);
+
+  if (root->right)
+    tree_free(root->right);
+  
+  free(root);
 }
 
 /**

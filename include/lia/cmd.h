@@ -34,7 +34,6 @@ typedef union operand {
 } operand_t;
 
 
-unsigned long int hash(unsigned char *str);
 cmd_t *lia_cmd_new(cmd_t *tree, char *name, cmd_arg_t *args, char *body);
 int lia_cmd_compile(FILE *output, cmd_t *cmd, operand_t *ops);
 

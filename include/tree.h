@@ -13,6 +13,7 @@ typedef struct tree {
   EXTENDS_TREE(tree);
 } tree_t;
 
+unsigned long int hash(unsigned char *str);
 void *tree_insert(void *tree, unsigned int size, unsigned long int hashname);
 void *tree_find(void *tree, unsigned long int hashname);
 void tree_free(void *tree);

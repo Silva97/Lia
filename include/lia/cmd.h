@@ -3,6 +3,7 @@
 
 #include <inttypes.h>
 #include "tree.h"
+#include "lia/procedure.h"
 
 #define CMD_ARGC 3
 #define CMDT cmd_arg_t[CMD_ARGC]   /**< For use in compound literals */
@@ -35,6 +36,6 @@ typedef union operand {
 
 
 cmd_t *lia_cmd_new(cmd_t *tree, char *name, cmd_arg_t *args, char *body);
-int lia_cmd_compile(FILE *output, cmd_t *cmd, operand_t *ops);
+int lia_cmd_compile(proc_t *proctree, FILE *output, cmd_t *cmd, operand_t *ops);
 
 #endif /* _LIA_CMD_H */

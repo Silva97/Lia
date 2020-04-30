@@ -81,13 +81,14 @@ static void imm_compile(FILE *output, uint8_t imm)
 /**
  * @brief Compile a command in the Ases code
  * 
+ * @param proctree The tree of procedures
  * @param output   The file to write the code
  * @param cmd      The command to compile
  * @param ops      The operands
- * @return >0      If all ok
+ * @return nonzero If all ok
  * @return 0       If error
  */
-int lia_cmd_compile(FILE *output, cmd_t *cmd, operand_t *ops)
+int lia_cmd_compile(proc_t *proctree, FILE *output, cmd_t *cmd, operand_t *ops)
 {
   int index;
   char *position;
@@ -114,6 +115,9 @@ int lia_cmd_compile(FILE *output, cmd_t *cmd, operand_t *ops)
         break;
       case 'i':
         imm_compile(output, ops[index].imm);
+        break;
+      case 'p':
+        proc_call( output, proc_add(proctree, ops[index].procedure) );
         break;
       default:
         return 0;

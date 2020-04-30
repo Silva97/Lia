@@ -13,6 +13,15 @@
 #include <ctype.h>
 #include "lia/cmd.h"
 
+/**
+ * @brief Generate the code to get or set a register
+ * 
+ * @param output   The file to write
+ * @param reg      The register's name
+ * @param get      0 to set, nonzero to get
+ * @return 0       If register not exists
+ * @return nonzero If all ok
+ */
 static int reg_compile(FILE *output, char *reg, int get)
 {
   char result;
@@ -42,7 +51,13 @@ static int reg_compile(FILE *output, char *reg, int get)
   return 1;
 }
 
-static int imm_compile(FILE *output, uint8_t imm)
+/**
+ * @brief Generate code to set a immediate value
+ * 
+ * @param output   The file to write the instruction
+ * @param imm      The value
+ */
+static void imm_compile(FILE *output, uint8_t imm)
 {
   putc('.', output);
 

@@ -64,8 +64,18 @@ static void imm_compile(FILE *output, uint8_t imm)
   for (int i = 0; i < imm/10; i++)
     putc('6', output);
   
-  for (int i = imm%10; i > 0; i--)
-    putc('+', output);
+
+  unsigned int total = imm%10;
+
+  if (total > 5) {
+    putc('6', output);
+
+    for (int i = 10 - total; i > 0; i--)
+      putc('-', output);
+  } else {
+    for (int i = total; i > 0; i--)
+      putc('+', output);
+  }
 }
 
 /**

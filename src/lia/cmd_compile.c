@@ -12,6 +12,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "lia/cmd.h"
+#include "lia/procedure.h"
 
 /**
  * @brief Generate the code to get or set a register

@@ -5,8 +5,7 @@
  * @version 0.1
  * @date    2020-04-25
  * 
- * @copyright Copyright (c) 2020
- * 
+ * @copyright Copyright (c) 2020 Luiz Felipe
  */
 #ifndef _LIA_LEXER_H
 #define _LIA_LEXER_H

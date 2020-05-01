@@ -6,7 +6,7 @@
 test_t test_procedure(void)
 {
   const int size = 5;
-  int list[size];
+  proc_t *list[size];
   char names[][16] = {
     "test1",
     "function",
@@ -21,10 +21,10 @@ test_t test_procedure(void)
   }
   
   for (int i = 0; i < size; i++) {
-    if (proc_add(tree, names[i]) != list[i])
+    if (proc_add(tree, names[i])->index != list[i]->index)
       METRIC_TEST_FAIL("Index not match");
     
-    printf("%d: ", list[i]);
+    printf("%d: ", list[i]->index);
     proc_call(stdout, list[i]);
     putchar('\n');
 

@@ -57,6 +57,7 @@ token_t *lia_lexer(char *filename, FILE *input)
       this->next = NULL;
       this->line = line;
       this->column = column;
+      strcpy(this->text, ":EOF:");
       return first;
 
     case '\n':
@@ -65,7 +66,7 @@ token_t *lia_lexer(char *filename, FILE *input)
       // No break here!
     case ';':
       this->type = TK_SEPARATOR;
-      strcpy(this->text, ";");
+      strcpy(this->text, ":SEPARATOR:");
       break;
 
     case '[':

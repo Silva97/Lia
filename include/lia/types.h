@@ -19,6 +19,7 @@
 /** Number of arguments to a command */
 #define CMD_ARGC 3
 
+
 /** Enumeration to token's type. */
 typedef enum token_type {
   TK_EOF,
@@ -46,6 +47,7 @@ typedef struct token {
   uint8_t value;
 } token_t;
 
+
 /** Type of a instruction */
 typedef enum inst_type {
   INST_META_NEW,
@@ -59,6 +61,7 @@ typedef struct inst {
 
   inst_type_t type;
 } inst_t;
+
 
 /** Argument to a command */
 typedef struct cmd_arg {
@@ -87,6 +90,7 @@ typedef struct proc {
   EXTENDS_TREE(proc);
 
   unsigned int index;
+  inst_t *body;
 } proc_t;
 
 #endif /* _LIA_TYPES_H */

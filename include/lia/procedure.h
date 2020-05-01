@@ -1,7 +1,9 @@
 #ifndef _LIA_PROCEDURE_H
 #define _LIA_PROCEDURE_H
 
+#include <stdio.h>
 #include "tree.h"
+#include "lexer.h"
 
 /** First index of a procedure */
 #define PROCINDEX 2
@@ -17,11 +19,12 @@ typedef struct proc {
   EXTENDS_TREE(proc);
 
   unsigned int index;
+  token_t *body;
 } proc_t;
 
 
-unsigned int proc_add(proc_t *root, char *name);
-void proc_call(FILE *output, unsigned int index);
-void proc_ret(FILE *output, unsigned int index);
+proc_t *proc_add(proc_t *root, char *name);
+void proc_call(FILE *output, proc_t *proc);
+void proc_ret(FILE *output, proc_t *proc);
 
 #endif /* _LIA_PROCEDURE_H */

@@ -15,36 +15,37 @@
  * 
  * This function is thread-unsafe.
  * 
- * @param root           The tree's root
- * @param name           The name of the procedure
- * @return unsigned int  The index of the procedure
+ * @param root       The tree's root
+ * @param name       The name of the procedure
+ * @return proc_t*   The element of the procedure
  */
-unsigned int proc_add(proc_t *root, char *name)
+proc_t *proc_add(proc_t *root, char *name)
 {
   static unsigned int index = PROCINDEX;
   unsigned long int hashname = hash(name);
   proc_t *elem = tree_find(root, hashname);
 
   if (elem)
-    return elem->index;
+    return elem;
   
   elem = tree_insert(root, sizeof (proc_t), hashname);
+  elem->name = name;
   elem->index = index++;
 
-  return elem->index;
+  return elem;
 }
 
 /**
  * @brief Writes the procedure's call
  * 
  * @param output   The file to write
- * @param index    The index of the procedure
+ * @param proc     The procedure to make the call
  */
-void proc_call(FILE *output, unsigned int index)
+void proc_call(FILE *output, proc_t *proc)
 {
   fputs(PROC_CALL1, output);
 
-  for (int i = 0; i < index; i++)
+  for (int i = 0; i < proc->index; i++)
     putc('>', output);
   
   fputs(PROC_CALL2, output);
@@ -54,11 +55,11 @@ void proc_call(FILE *output, unsigned int index)
  * @brief Writes the procedure's return instruction without *
  * 
  * @param output   The file to write
- * @param index    The index of the procedure
+ * @param proc     The procedure to make the ret instruction
  */
-void proc_ret(FILE *output, unsigned int index)
+void proc_ret(FILE *output, proc_t *proc)
 {
-  unsigned int total = PROC_CALLSIZE + index;
+  unsigned int total = PROC_CALLSIZE + proc->index;
   fputs("<=", output);
 
   for (int i = 0; i < total/10; i++)

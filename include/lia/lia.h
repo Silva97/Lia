@@ -8,4 +8,6 @@
 #include "lia/parser.h"
 #include "lia/procedure.h"
 
+imp_t *lia_process(char *filename, FILE *input, lia_t *lia);
+
 #endif /* _LIA_H */

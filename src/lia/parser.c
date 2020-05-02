@@ -82,15 +82,15 @@ inst_t *inst_add(inst_t *list, inst_type_t type)
 /**
  * @brief Analyzes the syntax of the Lia code
  * 
- * @param filename   The name of the source file
- * @param lia        The Lia struct
- * @return int       The number of errors
+ * @param lia     The Lia struct
+ * @param file    The file struct
+ * @return int    The number of errors
  */
-int lia_parser(char *filename, lia_t *lia)
+int lia_parser(lia_t *lia, imp_t *file)
 {
   metakeyword_t meta;
   token_t *next;
-  token_t *this = lia->tklist;
+  token_t *this = file->tklist;
   int errcount = 0;
 
   token_t *( *metakeys[] )(KEY_ARGS) = {
@@ -114,7 +114,7 @@ int lia_parser(char *filename, lia_t *lia)
       this = metanext(this);
       meta = ismetakey(this);
       if (meta == META_NONE) {
-        lia_error(filename, this->next->line, this->next->column,
+        lia_error(file->filename, this->next->line, this->next->column,
           "Expected a meta-keyword, instead have `%s'", this->next->text);
         
         this = tknext(this, TK_CLOSEBRACKET);
@@ -125,7 +125,7 @@ int lia_parser(char *filename, lia_t *lia)
         break;
       }
 
-      next = metakeys[meta](filename, this, lia);
+      next = metakeys[meta](this, file, lia);
       if ( !next ) {
         this = tknext(this, TK_CLOSEBRACKET);
         if (this->next)
@@ -136,7 +136,7 @@ int lia_parser(char *filename, lia_t *lia)
       }
 
       if (next->type != TK_CLOSEBRACKET) {
-        lia_error(filename, next->line, next->column,
+        lia_error(file->filename, next->line, next->column,
           "Expected ']', instead have `%s'", next->text);
 
         this = next;
@@ -145,7 +145,7 @@ int lia_parser(char *filename, lia_t *lia)
       }
 
       if ( next->next->type != TK_SEPARATOR && next->next->type != TK_EOF ) {
-        lia_error(filename, next->next->line, next->next->column,
+        lia_error(file->filename, next->next->line, next->next->column,
           "Expected a instruction separator, instead have `%s'",
           next->next->text);
         
@@ -158,12 +158,12 @@ int lia_parser(char *filename, lia_t *lia)
       break;
     
     case TK_ID:
-      lia_error(filename, this->line, this->column, "%s", "Not implemented!");
+      lia_error(file->filename, this->line, this->column, "%s", "Not implemented!");
       this = this->next;
       break;
     
     default:
-      lia_error(filename, this->line, this->column,
+      lia_error(file->filename, this->line, this->column,
         "Unexpected token `%s'", this->text);
       
       this = tknext(this, TK_SEPARATOR);
@@ -179,5 +179,6 @@ int lia_parser(char *filename, lia_t *lia)
     this = this->next;
   }
 
+  lia->errcount = errcount;
   return errcount;
 }

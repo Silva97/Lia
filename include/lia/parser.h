@@ -21,6 +21,6 @@ keyword_t iskey(token_t *tk);
 int tkseq(token_t *tk, unsigned int number, ...);
 
 inst_t *inst_add(inst_t *list, inst_type_t type);
-int lia_parser(char *filename, lia_t *lia);
+int lia_parser(lia_t *lia, imp_t *file);
 
 #endif /* _LIA_PARSER_H */

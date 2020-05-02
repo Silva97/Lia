@@ -60,7 +60,7 @@ token_t *meta_new(KEY_ARGS)
   tk = metanext(tk);
 
   if ( tk->type != TK_ID ) {
-    lia_error(filename, tk->line, tk->column,
+    lia_error(file->filename, tk->line, tk->column,
       "Expected a identifier to command's name, instead have `%s'", tk->text);
   }
 
@@ -73,15 +73,15 @@ token_t *meta_new(KEY_ARGS)
     if ( number >= 0 ) {
       switch (number) {
       case 0:
-        lia_error(filename, tk->line, tk->column,
+        lia_error(file->filename, tk->line, tk->column,
           "Expected a argument name, instead have `%s'", tk->text);
         break;
       case 1:
-        lia_error(filename, tk->next->line, tk->next->column,
+        lia_error(file->filename, tk->next->line, tk->next->column,
           "Expected ':', instead have `%s'", tk->next->text);
         break;
       case 2:
-        lia_error(filename, tk->next->next->line, tk->next->next->column,
+        lia_error(file->filename, tk->next->next->line, tk->next->next->column,
           "Expected a type name, instead have `%s'", tk->next->next->text);
         break;
       }
@@ -90,14 +90,14 @@ token_t *meta_new(KEY_ARGS)
     }
 
     if (strlen(tk->text) > 1 || strchr( REGLIST, tolower(tk->text[0]) ) ) {
-      lia_error(filename, tk->line, tk->column,
+      lia_error(file->filename, tk->line, tk->column,
         "`%s' is a invalid argument name", tk->text);
       return NULL;
     }
 
     char *find = strchr( "irp", tolower(tk->next->next->text[0]) );
     if ( !find || tk->next->next->text[1] ) {
-      lia_error(filename, tk->next->next->line, tk->next->next->column,
+      lia_error(file->filename, tk->next->next->line, tk->next->next->column,
         "`%s' is a invalid type name", tk->next->next->text);
       return NULL;
     }
@@ -109,7 +109,7 @@ token_t *meta_new(KEY_ARGS)
   }
 
   if (tk->type != TK_EQUAL) {
-    lia_error(filename, tk->line, tk->column,
+    lia_error(file->filename, tk->line, tk->column,
       "Expected '=', instead have `%s'", tk->text);
     return NULL;
   }
@@ -117,7 +117,7 @@ token_t *meta_new(KEY_ARGS)
   tk = metanext(tk);
 
   if (tk->type != TK_STRING) {
-    lia_error(filename, tk->line, tk->column,
+    lia_error(file->filename, tk->line, tk->column,
       "Expected a string, instead have `%s'", tk->text);
     return NULL;
   }

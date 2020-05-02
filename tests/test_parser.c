@@ -43,14 +43,14 @@ static void tree_print(cmd_t *tree, unsigned int level)
 
 test_t test_new(void)
 {
-  lia_t *lia = calloc(1, sizeof *lia);
   FILE *input = fopen(TESTNEW, "r");
-  lia->tklist = lia_lexer(TESTNEW, input);
+  lia_t *lia = calloc(1, sizeof *lia);
+  
+  lia_process(TESTNEW, input, lia);
 
-  int err = lia_parser(TESTNEW, lia);
   tree_print(lia->cmdtree, 0);
 
-  if (err != 2) {
+  if (lia->errcount != 2) {
     METRIC_TEST_FAIL("Error in parsing the code");
   }
 

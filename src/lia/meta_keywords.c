@@ -68,17 +68,7 @@ token_t *meta_new(KEY_ARGS)
 
   tk = metanext(tk);
 
-  for (int i = 0; i < CMD_ARGC; i++) {
-    if (tk->type == TK_EQUAL) {
-      if ( !i ) {
-        lia_error(filename, tk->line, tk->column,
-          "%s", "Expected a list of arguments before '='");
-        return NULL;
-      }
-
-      break;
-    }
-    
+  for (int i = 0; i < CMD_ARGC && tk->type != TK_EQUAL; i++) {
     number = tkseq(tk, 3, TK_ID, TK_COLON, TK_ID);
     if ( number >= 0 ) {
       switch (number) {

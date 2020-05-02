@@ -50,11 +50,11 @@ test_t test_new(void)
   int err = lia_parser(TESTNEW, lia);
   tree_print(lia->cmdtree, 0);
 
-  if (err != 3) {
+  if (err != 2) {
     METRIC_TEST_FAIL("Error in parsing the code");
   }
 
-  METRIC_TEST_OK("Three errors expected");
+  METRIC_TEST_OK("Two errors expected");
 }
 
 int main(void)

@@ -1,10 +1,80 @@
 #include <stdio.h>
-#include "lia/lexer.h"
+#include <stdlib.h>
+#include <string.h>
+#include <getopt.h>
+#include "lia/lia.h"
+#include "filepath.h"
+
+#define DEF_OUT "out.ases"
+
+void show_help(void);
 
 int main(int argc, char **argv)
 {
-  FILE *input = fopen(argv[1], "r");
-  token_t *code = lia_lexer(argv[1], input);
+  int opt;
+  char *outname = DEF_OUT;
+  
+  if (argc <= 1) {
+    puts("Usage: lia [options] source1.lia source2.lia ...");
+    return EXIT_SUCCESS;
+  }
+  
+  lia_t *lia = calloc(1, sizeof *lia);
+  lia->pathlist = calloc( 1, sizeof (path_t) );
 
-  return 0;
+  while ( (opt = getopt(argc, argv, "I:o:h")) > 0 ) {
+    switch (opt) {
+    case 'I':
+      path_insert(lia->pathlist, optarg);
+      break;
+    case 'o':
+      outname = optarg;
+      break;
+    case 'h':
+      show_help();
+      return EXIT_SUCCESS;
+    }
+  }
+
+  FILE *input;
+
+  for (int i = optind, count_in = 0; i < argc; i++) {
+    if ( !strcmp(argv[i], "-") ) {
+      if (count_in) {
+        fprintf(stderr, "Error: Input file from stdin can't be repeated!\n");
+        return EXIT_FAILURE;
+      }
+
+      input = stdin;
+      count_in++;
+    } else {
+      input = fopen(argv[i], "r");
+
+      if ( !input ) {
+        fprintf(stderr, "Error: File '%s' not found.\n", argv[i]);
+        return EXIT_FAILURE;
+      }
+    }
+
+    lia_process(argv[i], input, lia);
+    if (lia->errcount)
+      break;
+  }
+
+  return lia->errcount;
+}
+
+
+void show_help(void)
+{
+  puts(
+    "Developed by Luiz Felipe (felipe.silva337@yahoo.com)\n"
+    "GitHub: https://github.com/Silva97/lia\n\n"
+
+    "Usage: lia [options] source1.lia source2.lia ...\n"
+    "  -o     Specify the output name. (Default: \"" DEF_OUT "\")\n"
+    "  -I     Define a path to search files in import. It's possible\n"
+    "         use multiple times to set more paths.\n"
+    "  -h     Show this help message."
+  );
 }

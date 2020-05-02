@@ -160,7 +160,7 @@ int lia_parser(lia_t *lia, imp_t *file)
           "Expected a instruction separator, instead have `%s'",
           next->next->text);
         
-        this = next->next;
+        this = tknext(next->next, TK_SEPARATOR)->last;
         errcount++;
         break;
       }
@@ -172,7 +172,17 @@ int lia_parser(lia_t *lia, imp_t *file)
       key = iskey(this);
       next = keys[key](this, file, lia);
       if ( !next ) {
-        this = tknext(this, TK_SEPARATOR);         
+        this = tknext(this, TK_SEPARATOR)->last;         
+        errcount++;
+        break;
+      }
+
+      if (next->type != TK_SEPARATOR && next->type != TK_EOF) {
+        lia_error(file->filename, next->line, next->column,
+          "Expected a instruction separator, instead have `%s'",
+          next->text);
+        
+        this = tknext(next, TK_SEPARATOR)->last;
         errcount++;
         break;
       }

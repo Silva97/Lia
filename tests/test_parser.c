@@ -4,6 +4,7 @@
 #include "metric.h"
 
 #define TESTFILE "tests/import.lia"
+#define TESTINST "tests/instruction.lia"
 
 static void cmd_print(cmd_t *cmd)
 {
@@ -57,9 +58,34 @@ test_t test_parser(void)
   METRIC_TEST_OK("Two errors expected");
 }
 
+test_t test_instlist(void)
+{
+  FILE *input = fopen(TESTINST, "r");
+  lia_t *lia = calloc(1, sizeof *lia);
+  
+  lia_process(TESTINST, input, lia);
+
+  inst_t *this = lia->instlist;
+  while (this) {
+    printf("%d = %s ", this->type, this->child->text);
+
+    for (token_t *tk = this->child; tk = tk->next;)
+      printf("%s ", tk->text);
+
+    putchar('\n');
+    this = this->next;
+  }
+
+  if (lia->errcount != 4)
+    METRIC_TEST_FAIL("Error on instruction list");
+
+  METRIC_TEST_OK("Four errors expected");
+}
+
 int main(void)
 {
   METRIC_TEST(test_parser);
+  METRIC_TEST(test_instlist);
 
   METRIC_TEST_END();
   return metric_count_tests_fail;

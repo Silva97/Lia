@@ -1,0 +1,14 @@
+func 2
+func 3
+func 10
+
+push  ra
+push  23
+store 77
+store rb
+store re
+
+load ra
+load 10
+pop  ss
+pop  5

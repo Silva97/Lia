@@ -79,6 +79,32 @@ static void imm_compile(FILE *output, uint8_t imm)
   }
 }
 
+
+/**
+ * @brief Verify if a token is a valid register name
+ * 
+ * @param tk    The token to verify
+ * @return int  0 if not, nonzero if yes
+ */
+int isreg(token_t *tk)
+{
+  if (tk->type != TK_ID)
+    return 0;
+  
+  if ( !strcmp(tk->text, "ss") )
+    return 1;
+  if ( !strcmp(tk->text, "ra") )
+    return 1;
+  if ( !strcmp(tk->text, "rb") )
+    return 1;
+  if ( !strcmp(tk->text, "rc") )
+    return 1;
+  if ( !strcmp(tk->text, "rd") )
+    return 1;
+
+  return 0;
+}
+
 /**
  * @brief Compile a command in the Ases code
  * 

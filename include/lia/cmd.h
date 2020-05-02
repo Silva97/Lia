@@ -24,6 +24,7 @@
 
 
 cmd_t *lia_cmd_new(cmd_t *tree, char *name, cmd_arg_t *args, char *body);
+int isreg(token_t *tk);
 int lia_cmd_compile(proc_t *proctree, FILE *output, cmd_t *cmd, operand_t *ops);
 
 #endif /* _LIA_CMD_H */

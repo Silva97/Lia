@@ -108,12 +108,19 @@ typedef struct proc {
   inst_t *body;
 } proc_t;
 
+/** Path's list to search imported files */
+typedef struct path {
+  struct path *next;
+  char *text;
+} path_t;
+
 /** A Lia's struct reserving all informations about a code */
 typedef struct lia {
   proc_t *proctree;  /**< The procedures' tree */
   cmd_t *cmdtree;    /**< The commands' tree */
   imp_t *imptree;    /**< The imports' tree */
   inst_t *instlist;  /**< The instructions' list */
+  path_t *pathlist;  /**< The paths' list */
   
   unsigned int errcount;
 } lia_t;

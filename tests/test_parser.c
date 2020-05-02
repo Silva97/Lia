@@ -3,7 +3,7 @@
 #include "lia/lia.h"
 #include "metric.h"
 
-#define TESTNEW "tests/new.lia"
+#define TESTFILE "tests/import.lia"
 
 static void cmd_print(cmd_t *cmd)
 {
@@ -41,12 +41,12 @@ static void tree_print(cmd_t *tree, unsigned int level)
 }
 
 
-test_t test_new(void)
+test_t test_parser(void)
 {
-  FILE *input = fopen(TESTNEW, "r");
+  FILE *input = fopen(TESTFILE, "r");
   lia_t *lia = calloc(1, sizeof *lia);
   
-  lia_process(TESTNEW, input, lia);
+  lia_process(TESTFILE, input, lia);
 
   tree_print(lia->cmdtree, 0);
 
@@ -59,7 +59,7 @@ test_t test_new(void)
 
 int main(void)
 {
-  METRIC_TEST(test_new);
+  METRIC_TEST(test_parser);
 
   METRIC_TEST_END();
   return metric_count_tests_fail;

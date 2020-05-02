@@ -18,8 +18,15 @@ token_t *meta_new(KEY_ARGS);
 token_t *meta_import(KEY_ARGS);
 
 keyword_t iskey(token_t *tk);
-int tkseq(token_t *tk, unsigned int number, ...);
+token_t *cmd_verify(KEY_ARGS);
+token_t *key_func(KEY_ARGS);
+token_t *key_load(KEY_ARGS);
+token_t *key_store(KEY_ARGS);
+token_t *key_push(KEY_ARGS);
+token_t *key_pop(KEY_ARGS);
+token_t *key_if(KEY_ARGS);
 
+int tkseq(token_t *tk, unsigned int number, ...);
 inst_t *inst_add(inst_t *list, inst_type_t type);
 int lia_parser(lia_t *lia, imp_t *file);
 

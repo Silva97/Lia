@@ -89,6 +89,7 @@ inst_t *inst_add(inst_t *list, inst_type_t type)
 int lia_parser(lia_t *lia, imp_t *file)
 {
   metakeyword_t meta;
+  keyword_t key;
   token_t *next;
   token_t *this = file->tklist;
   int errcount = 0;
@@ -98,6 +99,16 @@ int lia_parser(lia_t *lia, imp_t *file)
     [META_IMPORT] = meta_import
   };
 
+  token_t *( *keys[] )(KEY_ARGS) = {
+    [KEY_NONE] = cmd_verify,
+    [KEY_FUNC] = key_func,
+    [KEY_LOAD] = key_load,
+    [KEY_STORE] = key_store,
+    [KEY_PUSH] = key_push,
+    [KEY_POP] = key_pop,
+    [KEY_IF] = key_if,
+  };
+
   if ( !lia->proctree )
     lia->proctree = calloc(1, sizeof (proc_t));
   if ( !lia->cmdtree )
@@ -105,7 +116,7 @@ int lia_parser(lia_t *lia, imp_t *file)
   if ( !lia->instlist )
     lia->instlist = calloc(1, sizeof (inst_t));
 
-  while (this->type != TK_EOF) {
+  while (this && this->type != TK_EOF) {
     switch (this->type) {
     case TK_SEPARATOR:
       break; // Just ignore it
@@ -158,8 +169,15 @@ int lia_parser(lia_t *lia, imp_t *file)
       break;
     
     case TK_ID:
-      lia_error(file->filename, this->line, this->column, "%s", "Not implemented!");
-      this = this->next;
+      key = iskey(this);
+      next = keys[key](this, file, lia);
+      if ( !next ) {
+        this = tknext(this, TK_SEPARATOR);         
+        errcount++;
+        break;
+      }
+
+      this = next;
       break;
     
     default:

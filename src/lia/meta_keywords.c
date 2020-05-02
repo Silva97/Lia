@@ -11,9 +11,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "lia/parser.h"
-#include "lia/error.h"
-#include "lia/cmd.h"
+#include "filepath.h"
+#include "lia/lia.h"
 
 /**
  * @brief Verify if a token is a meta-keyword
@@ -128,5 +127,31 @@ token_t *meta_new(KEY_ARGS)
 
 token_t *meta_import(KEY_ARGS)
 {
+  token_t *first = tk;
 
+  while (tk) {
+    tk = metanext(tk);
+
+    if (tk->type != TK_STRING) {
+      lia_error(file->filename, tk->line, tk->column,
+        "Expected string, instead have: `%s'", tk->text);
+      return NULL;
+    }
+
+    FILE *input = pfind(tk->text, "r", lia->pathlist);
+
+    if ( !input ) {
+      lia_error(file->filename, first->line, first->column,
+        "Module \"%s\" not found.", tk->text);
+      return NULL;
+    }
+
+    lia_process(tk->text, input, lia);
+
+    tk = metanext(tk);
+    if (tk->type != TK_COMMA)
+      break;
+  }
+
+  return tk;
 }

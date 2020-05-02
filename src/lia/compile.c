@@ -33,7 +33,7 @@ imp_t *lia_process(char *filename, FILE *input, lia_t *lia)
   file->input = input;
 
   file->tklist = lia_lexer(filename, input);
-  lia->errcount = lia_parser(lia, file);
+  lia->errcount += lia_parser(lia, file);
 
   return file; 
 }

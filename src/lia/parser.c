@@ -179,6 +179,5 @@ int lia_parser(lia_t *lia, imp_t *file)
     this = this->next;
   }
 
-  lia->errcount = errcount;
   return errcount;
 }

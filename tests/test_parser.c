@@ -76,10 +76,10 @@ test_t test_instlist(void)
     this = this->next;
   }
 
-  if (lia->errcount != 4)
+  if (lia->errcount != 5)
     METRIC_TEST_FAIL("Error on instruction list");
 
-  METRIC_TEST_OK("Four errors expected");
+  METRIC_TEST_OK("Five errors expected");
 }
 
 int main(void)

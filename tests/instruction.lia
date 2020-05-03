@@ -1,5 +1,4 @@
 func 2
-func 3
 func 10
 
 push  ra
@@ -12,3 +11,12 @@ load ra
 load 10
 pop  ss
 pop  5
+
+call abc
+ret
+ret 12
+ret a
+
+proc abc
+  prtab
+endproc

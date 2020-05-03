@@ -106,7 +106,12 @@ int lia_parser(lia_t *lia, imp_t *file)
     [KEY_STORE] = key_store,
     [KEY_PUSH] = key_push,
     [KEY_POP] = key_pop,
-    [KEY_IF] = key_if,
+    [KEY_CALL] = key_call,
+    [KEY_RET] = key_ret,
+    [KEY_PROC] = key_proc,
+    [KEY_ENDPROC] = key_endproc,
+    [KEY_PRTAB] = key_prtab,
+    [KEY_IF] = key_if
   };
 
   if ( !lia->proctree )

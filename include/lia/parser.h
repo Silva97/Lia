@@ -24,6 +24,11 @@ token_t *key_load(KEY_ARGS);
 token_t *key_store(KEY_ARGS);
 token_t *key_push(KEY_ARGS);
 token_t *key_pop(KEY_ARGS);
+token_t *key_call(KEY_ARGS);
+token_t *key_proc(KEY_ARGS);
+token_t *key_endproc(KEY_ARGS);
+token_t *key_prtab(KEY_ARGS);
+token_t *key_ret(KEY_ARGS);
 token_t *key_if(KEY_ARGS);
 
 int tkseq(token_t *tk, unsigned int number, ...);

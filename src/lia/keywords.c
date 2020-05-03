@@ -33,6 +33,16 @@ keyword_t iskey(token_t *tk)
     return KEY_PUSH;
   if ( !strcmp(tk->text, "pop") )
     return KEY_POP;
+  if ( !strcmp(tk->text, "call") )
+    return KEY_CALL;
+  if ( !strcmp(tk->text, "ret") )
+    return KEY_RET;
+  if ( !strcmp(tk->text, "proc") )
+    return KEY_PROC;
+  if ( !strcmp(tk->text, "endproc") )
+    return KEY_ENDPROC;
+  if ( !strcmp(tk->text, "prtab") )
+    return KEY_PRTAB;
   if ( !strcmp(tk->text, "ifz") || !strcmp(tk->text, "ifnz") )
     return KEY_IF;
   
@@ -82,6 +92,36 @@ static token_t *key_op1ri(KEY_ARGS,  inst_type_t type)
   return next;
 }
 
+/** op1 = TK_ID */
+static token_t *key_op1id(KEY_ARGS,  inst_type_t type)
+{
+  tk = tk->next;
+
+  if (tk->type != TK_ID) {
+    lia_error(file->filename, tk->line, tk->column,
+      "Expected a procedure name, instead have `%s'", tk->text);
+    return NULL;
+  }
+
+  token_t *next = tk->next;
+  inst_t *inst = inst_add(lia->instlist, type);
+  inst->child = tk->last;
+  tk->next = NULL;
+
+  return next;
+}
+
+/** No arguments */
+static token_t *key_opnone(KEY_ARGS,  inst_type_t type)
+{
+  token_t *next = tk->next;
+  inst_t *inst = inst_add(lia->instlist, type);
+  inst->child = tk;
+  tk->next = NULL;
+
+  return next;
+}
+
 token_t *key_func(KEY_ARGS)
 {
   tk = tk->next;
@@ -124,6 +164,49 @@ token_t *key_push(KEY_ARGS)
 token_t *key_pop(KEY_ARGS)
 {
   return key_op1reg(tk, file, lia, INST_POP);
+}
+
+token_t *key_call(KEY_ARGS)
+{
+  return key_op1id(tk, file, lia, INST_CALL);
+}
+
+token_t *key_proc(KEY_ARGS)
+{
+  return key_op1id(tk, file, lia, INST_PROC);
+}
+
+token_t *key_endproc(KEY_ARGS)
+{
+  return key_opnone(tk, file, lia, INST_ENDPROC);
+}
+
+token_t *key_prtab(KEY_ARGS)
+{
+  return key_opnone(tk, file, lia, INST_PRTAB);
+}
+
+token_t *key_ret(KEY_ARGS)
+{
+  token_t *next;
+  tk = tk->next;
+
+  if (tk->type == TK_IMMEDIATE) {
+    next = tk->next;
+    tk->next = NULL;
+  } else if (tk->type != TK_SEPARATOR && tk->type != TK_EOF) {
+    lia_error(file->filename, tk->line, tk->column,
+      "Expected a literal number, instead have `%s'", tk->text);
+    return NULL;
+  } else {
+    next = tk;
+    tk->last->next = NULL;
+  }
+
+  inst_t *inst = inst_add(lia->instlist, INST_RET);
+  inst->child = tk->last;
+
+  return next;
 }
 
 token_t *key_if(KEY_ARGS)

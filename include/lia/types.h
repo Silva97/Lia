@@ -86,11 +86,16 @@ typedef struct import {
 
 /** Type of a instruction */
 typedef enum inst_type {
+  INST_PRTAB,
   INST_FUNC,
   INST_LOAD,
   INST_STORE,
   INST_PUSH,
   INST_POP,
+  INST_CALL,
+  INST_RET,
+  INST_PROC,
+  INST_ENDPROC,
   INST_CMD
 } inst_type_t;
 
@@ -144,6 +149,11 @@ typedef enum keyword {
   KEY_STORE,
   KEY_PUSH,
   KEY_POP,
+  KEY_CALL,
+  KEY_RET,
+  KEY_PROC,
+  KEY_ENDPROC,
+  KEY_PRTAB,
   KEY_IF
 } keyword_t;
 

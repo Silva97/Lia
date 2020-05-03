@@ -20,3 +20,9 @@ ret a
 proc abc
   prtab
 endproc
+
+ifnz pop ra
+
+ifz
+  call def
+endif

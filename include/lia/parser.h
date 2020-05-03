@@ -30,6 +30,7 @@ token_t *key_endproc(KEY_ARGS);
 token_t *key_prtab(KEY_ARGS);
 token_t *key_ret(KEY_ARGS);
 token_t *key_if(KEY_ARGS);
+token_t *key_endif(KEY_ARGS);
 
 int tkseq(token_t *tk, unsigned int number, ...);
 inst_t *inst_add(inst_t *list, inst_type_t type);

@@ -8,6 +8,7 @@
  * @copyright Copyright (c) 2020 Luiz Felipe
  */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "lia/lia.h"
 
@@ -45,6 +46,8 @@ keyword_t iskey(token_t *tk)
     return KEY_PRTAB;
   if ( !strcmp(tk->text, "ifz") || !strcmp(tk->text, "ifnz") )
     return KEY_IF;
+  if ( !strcmp(tk->text, "endif") )
+    return KEY_ENDIF;
   
   return KEY_NONE;
 }
@@ -211,5 +214,30 @@ token_t *key_ret(KEY_ARGS)
 
 token_t *key_if(KEY_ARGS)
 {
+  inst_t *inst;
+  token_t *next;
 
+  if (tk->next->type == TK_ID) {
+    inst = inst_add(lia->instlist, INST_IF);
+    inst->child = tk;
+    
+    next = calloc(1, sizeof *next);
+    next->line = tk->line;
+    next->type = TK_SEPARATOR;
+    next->last = tk;
+    next->next = tk->next;
+    tk->next = NULL;
+  } else {
+    next = tk->next;
+    inst = inst_add(lia->instlist, INST_IFBLOCK);
+    inst->child = tk;
+    tk->next = NULL;
+  }
+
+  return next;
+}
+
+token_t *key_endif(KEY_ARGS)
+{
+  return key_opnone(tk, file, lia, INST_ENDIF);
 }

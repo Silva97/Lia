@@ -102,9 +102,9 @@ test_t test_cmdparsing(void)
   }
 
   if (lia->errcount != 6)
-    METRIC_TEST_FAIL("");
+    METRIC_TEST_FAIL("Error on instruction list");
 
-  METRIC_TEST_OK("Five errors expected");
+  METRIC_TEST_OK("Six errors expected");
 }
 
 int main(void)

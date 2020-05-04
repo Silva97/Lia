@@ -126,6 +126,14 @@ typedef struct path {
   char *text;
 } path_t;
 
+/** Context stack to blocks instructions. */
+typedef struct ctx {
+  struct ctx *last;
+
+  inst_t *start;
+  inst_type_t endtype;
+} ctx_t;
+
 /** A Lia's struct reserving all informations about a code */
 typedef struct lia {
   proc_t *proctree;  /**< The procedures' tree */
@@ -134,6 +142,7 @@ typedef struct lia {
   inst_t *instlist;  /**< The instructions' list */
   path_t *pathlist;  /**< The paths' list */
   
+  ctx_t *ctx;        /**< Context for blocks instructions. */
   proc_t *inproc;    /**< Define context inside a procedure. */
   token_t *thisproc;
   unsigned int errcount;

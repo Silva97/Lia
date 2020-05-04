@@ -1,7 +1,7 @@
 #ifndef _LIA_H
 #define _LIA_H
 
-#define TAG "v0.1"
+#define LIA_TAG "v0.1"
 
 #include "lia/types.h"
 #include "lia/error.h"

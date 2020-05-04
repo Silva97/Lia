@@ -48,7 +48,7 @@ void lia_compiler(FILE *output, lia_t *lia, int pretty)
   inst_t *this = lia->instlist;
 
   fputs("#!/usr/bin/env ases\n"
-        "# Lia " TAG "\n\n",
+        "# Lia " LIA_TAG "\n\n",
         output);
 
   while (this) {

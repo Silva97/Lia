@@ -23,7 +23,7 @@
  * @return 0       If register not exists
  * @return nonzero If all ok
  */
-static int reg_compile(FILE *output, char *reg, int get)
+int reg_compile(FILE *output, char *reg, int get)
 {
   char result;
   if ( !strcmp(reg, "ss") )
@@ -58,7 +58,7 @@ static int reg_compile(FILE *output, char *reg, int get)
  * @param output   The file to write the instruction
  * @param imm      The value
  */
-static void imm_compile(FILE *output, uint8_t imm)
+void imm_compile(FILE *output, uint8_t imm)
 {
   putc('.', output);
 

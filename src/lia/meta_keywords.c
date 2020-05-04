@@ -147,6 +147,7 @@ token_t *meta_import(KEY_ARGS)
     }
 
     lia_process(tk->text, input, lia);
+    fclose(input);
 
     tk = metanext(tk);
     if (tk->type != TK_COMMA)

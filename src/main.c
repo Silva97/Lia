@@ -62,6 +62,10 @@ int main(int argc, char **argv)
     }
 
     lia_process(argv[i], input, lia);
+
+    if (input != stdin)
+      fclose(input);
+
     if (lia->errcount)
       return lia->errcount;
   }

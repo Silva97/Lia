@@ -16,11 +16,14 @@
 /** First index of a procedure */
 #define PROCINDEX 2
 
-#define PROC_CALL1 "Pd.pD!$D!>"
+#define PROC_CALL1 "$D!>Pd.pD!"
 #define PROC_CALL2 "=d.p=p*"
 
-/** The number of instructions after $ */
-#define PROC_CALLSIZE ( sizeof (PROC_CALL2) + 3 )
+/** The number of instructions after $
+ * 
+ * `- 3` because: '$' + two null terminators.
+ */
+#define PROC_CALLSIZE ( sizeof (PROC_CALL1) + sizeof (PROC_CALL2) - 3 )
 
 
 proc_t *proc_add(proc_t *root, char *name);

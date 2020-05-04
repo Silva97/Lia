@@ -3,8 +3,9 @@
 #include "lia/lia.h"
 #include "metric.h"
 
-#define TESTFILE "tests/import.lia"
+#define TESTMETA "tests/import.lia"
 #define TESTINST "tests/instruction.lia"
+#define TESTCMD "tests/cmd.lia"
 
 static void cmd_print(cmd_t *cmd)
 {
@@ -42,12 +43,12 @@ static void tree_print(cmd_t *tree, unsigned int level)
 }
 
 
-test_t test_parser(void)
+test_t test_meta(void)
 {
-  FILE *input = fopen(TESTFILE, "r");
+  FILE *input = fopen(TESTMETA, "r");
   lia_t *lia = calloc(1, sizeof *lia);
   
-  lia_process(TESTFILE, input, lia);
+  lia_process(TESTMETA, input, lia);
 
   tree_print(lia->cmdtree, 0);
 
@@ -82,10 +83,35 @@ test_t test_instlist(void)
   METRIC_TEST_OK("Five errors expected");
 }
 
+test_t test_cmdparsing(void)
+{
+  FILE *input = fopen(TESTCMD, "r");
+  lia_t *lia = calloc(1, sizeof *lia);
+  
+  lia_process(TESTCMD, input, lia);
+
+  inst_t *this = lia->instlist;
+  while (this) {
+    printf("%d = %s ", this->type, this->child->text);
+
+    for (token_t *tk = this->child; tk = tk->next;)
+      printf("%s ", tk->text);
+
+    putchar('\n');
+    this = this->next;
+  }
+
+  if (lia->errcount != 6)
+    METRIC_TEST_FAIL("");
+
+  METRIC_TEST_OK("Five errors expected");
+}
+
 int main(void)
 {
-  METRIC_TEST(test_parser);
+  METRIC_TEST(test_meta);
   METRIC_TEST(test_instlist);
+  METRIC_TEST(test_cmdparsing);
 
   METRIC_TEST_END();
   return metric_count_tests_fail;

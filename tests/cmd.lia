@@ -1,0 +1,19 @@
+[new test0             = "012"]
+[new test1 X:r         = "345"]
+[new test2 X:r Y:i     = "678"]
+[new test3 X:r Y:i Z:p = "999"]
+
+test0
+test0 'e'
+
+test1
+test1 rc
+test1 123
+
+test2 ss, 13
+test2 ss, ra
+
+test3 dp, 25, abc
+test3 ra, 99, rb
+
+test4

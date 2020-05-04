@@ -42,8 +42,6 @@ keyword_t iskey(token_t *tk)
     return KEY_PROC;
   if ( !strcmp(tk->text, "endproc") )
     return KEY_ENDPROC;
-  if ( !strcmp(tk->text, "prtab") )
-    return KEY_PRTAB;
   if ( !strcmp(tk->text, "ifz") || !strcmp(tk->text, "ifnz") )
     return KEY_IF;
   if ( !strcmp(tk->text, "endif") )
@@ -244,11 +242,6 @@ token_t *key_proc(KEY_ARGS)
 token_t *key_endproc(KEY_ARGS)
 {
   return key_opnone(tk, file, lia, INST_ENDPROC);
-}
-
-token_t *key_prtab(KEY_ARGS)
-{
-  return key_opnone(tk, file, lia, INST_PRTAB);
 }
 
 token_t *key_ret(KEY_ARGS)

@@ -87,7 +87,6 @@ typedef struct import {
 
 /** Type of a instruction */
 typedef enum inst_type {
-  INST_PRTAB,
   INST_FUNC,
   INST_LOAD,
   INST_STORE,
@@ -134,6 +133,7 @@ typedef struct lia {
   inst_t *instlist;  /**< The instructions' list */
   path_t *pathlist;  /**< The paths' list */
   
+  proc_t *inproc;    /**< Define context inside a procedure. */
   unsigned int errcount;
 } lia_t;
 

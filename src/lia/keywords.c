@@ -54,7 +54,63 @@ keyword_t iskey(token_t *tk)
 
 token_t *cmd_verify(KEY_ARGS)
 {
+  token_t *first = tk;
+  cmd_t *cmd = tree_find(lia->cmdtree, hash(tk->text));
 
+  if ( !cmd ) {
+    lia_error(file->filename, tk->line, tk->column,
+      "`%s' is not a valid keyword or defined command.", tk->text);
+    return NULL;
+  }
+
+  for (int i = 0; i < cmd->argc; i++) {
+    tk = tk->next;
+
+    switch (cmd->args[i].type) {
+    case 'r':
+      if ( !isreg(tk) ) {
+        lia_error(file->filename, tk->line, tk->column,
+          "Command '%s' expects a register at operand %d.", first->text, i+1);
+        return NULL;
+      }
+      break;
+    case 'i':
+      if (tk->type != TK_IMMEDIATE && tk->type != TK_CHAR) {
+        lia_error(file->filename, tk->line, tk->column,
+          "Command '%s' expects a immediate value at operand %d.",
+          first->text, i+1);
+        return NULL;
+      }
+      break;
+    case 'p':
+      if ( tk->type != TK_ID || isreg(tk) ) {
+        lia_error(file->filename, tk->line, tk->column,
+          "Command '%s' expects a procedure name at operand %d.",
+          first->text, i+1);
+        return NULL;
+      }
+      break;
+    }
+
+    if (tk->next->type != TK_COMMA)
+      break;
+    
+    tk = tk->next;
+  }
+
+  token_t *next = tk->next;
+
+  if (next->type != TK_SEPARATOR && next->type != TK_EOF) {
+    lia_error(file->filename, next->line, next->column,
+      "Command '%s' expects %d operands.", first->text, cmd->argc);
+    return NULL;
+  }
+
+  inst_t *inst = inst_add(lia->instlist, INST_CMD);
+  inst->child = first;
+  tk->next = NULL;
+
+  return next;
 }
 
 /** op1 = register */

@@ -18,7 +18,7 @@ ret 12
 ret a
 
 proc abc
-  prtab
+  ret
 endproc
 
 ifnz pop ra

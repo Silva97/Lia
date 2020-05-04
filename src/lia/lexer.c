@@ -16,7 +16,7 @@
 
 static int istkid(int c)
 {
-  return isupper(c) || islower(c) || c == '_';
+  return isupper(c) || islower(c) || isdigit(c) || c == '_';
 }
 
 static int isstrvalid(int c)
@@ -188,29 +188,7 @@ token_t *lia_lexer(char *filename, FILE *input)
       break;
 
     default:
-      if ( istkid(ch) ) {
-        this->type = TK_ID;
-        this->text[0] = ch;
-
-        for (int i = 1;; i++) {
-          if (i >= TKMAX) {
-            lia_error(filename, this->line, this->column,
-              "Maximum size of a token is %d characters", TKMAX-1);
-            tkfree(first);
-            return NULL;
-          }
-
-          ch = getc(input);
-
-          if ( !istkid(ch) )
-            break;
-
-          this->text[i] = ch;
-          column++;
-        }
-
-        ungetc(ch, input);
-      } else if ( isdigit(ch) ) {
+      if ( isdigit(ch) ) {
         int (*filter)(int);
         this->type = TK_IMMEDIATE;
         this->text[0] = ch;
@@ -264,6 +242,28 @@ token_t *lia_lexer(char *filename, FILE *input)
         }
 
         this->value = i;
+        ungetc(ch, input);
+      } else if ( istkid(ch) ) {
+        this->type = TK_ID;
+        this->text[0] = ch;
+
+        for (int i = 1;; i++) {
+          if (i >= TKMAX) {
+            lia_error(filename, this->line, this->column,
+              "Maximum size of a token is %d characters", TKMAX-1);
+            tkfree(first);
+            return NULL;
+          }
+
+          ch = getc(input);
+
+          if ( !istkid(ch) )
+            break;
+
+          this->text[i] = ch;
+          column++;
+        }
+
         ungetc(ch, input);
       } else {
         lia_error(filename, line, column, "Unexpected character '%c'", ch);

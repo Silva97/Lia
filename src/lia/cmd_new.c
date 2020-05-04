@@ -35,6 +35,10 @@ cmd_t *lia_cmd_new(cmd_t *tree, char *name, cmd_arg_t *args, char *body)
   new->name = name;
   memcpy(new->args, args, sizeof *args * CMD_ARGC);
   new->body = body;
+
+  new->argc = 0;
+  while (new->argc < CMD_ARGC && args[new->argc].name)
+    new->argc++;
   
   return new;
 }

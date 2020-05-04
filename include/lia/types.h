@@ -65,6 +65,7 @@ typedef struct cmd {
   EXTENDS_TREE(cmd);
 
   cmd_arg_t args[CMD_ARGC];
+  unsigned int argc;
   char *body;
 } cmd_t;
 

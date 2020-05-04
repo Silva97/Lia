@@ -77,7 +77,11 @@ int main(int argc, char **argv)
     return EXIT_FAILURE;
   }
 
-  lia_compiler(output, lia, pretty);
+  if ( lia_compiler(output, lia, pretty) ) {
+    fclose(output);
+    remove(outname);
+    return lia->errcount;
+  }
 
 #ifndef _WIN32
   chmod(outname, S_IRWXU);

@@ -93,6 +93,8 @@ int isreg(token_t *tk)
   
   if ( !strcmp(tk->text, "ss") )
     return 1;
+  if ( !strcmp(tk->text, "dp") )
+    return 1;
   if ( !strcmp(tk->text, "ra") )
     return 1;
   if ( !strcmp(tk->text, "rb") )

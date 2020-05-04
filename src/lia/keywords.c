@@ -108,6 +108,7 @@ token_t *cmd_verify(KEY_ARGS)
 
   inst_t *inst = inst_add(lia->instlist, INST_CMD);
   inst->child = first;
+  inst->file = file;
   tk->next = NULL;
 
   return next;
@@ -127,6 +128,7 @@ static token_t *key_op1reg(KEY_ARGS, inst_type_t type)
   token_t *next = tk->next;
   inst_t *inst = inst_add(lia->instlist, type);
   inst->child = tk->last;
+  inst->file = file;
   tk->next = NULL;
 
   return next;
@@ -146,6 +148,7 @@ static token_t *key_op1ri(KEY_ARGS,  inst_type_t type)
   token_t *next = tk->next;
   inst_t *inst = inst_add(lia->instlist, type);
   inst->child = tk->last;
+  inst->file = file;
   tk->next = NULL;
 
   return next;
@@ -165,6 +168,7 @@ static token_t *key_op1id(KEY_ARGS,  inst_type_t type)
   token_t *next = tk->next;
   inst_t *inst = inst_add(lia->instlist, type);
   inst->child = tk->last;
+  inst->file = file;
   tk->next = NULL;
 
   return next;
@@ -176,6 +180,7 @@ static token_t *key_opnone(KEY_ARGS,  inst_type_t type)
   token_t *next = tk->next;
   inst_t *inst = inst_add(lia->instlist, type);
   inst->child = tk;
+  inst->file = file;
   tk->next = NULL;
 
   return next;
@@ -200,6 +205,7 @@ token_t *key_func(KEY_ARGS)
   token_t *next = tk->next;
   inst_t *inst = inst_add(lia->instlist, INST_FUNC);
   inst->child = tk->last;
+  inst->file = file;
   tk->next = NULL;
 
   return next;
@@ -264,6 +270,7 @@ token_t *key_ret(KEY_ARGS)
 
   inst_t *inst = inst_add(lia->instlist, INST_RET);
   inst->child = tk->last;
+  inst->file = file;
 
   return next;
 }
@@ -290,6 +297,7 @@ token_t *key_if(KEY_ARGS)
     tk->next = NULL;
   }
 
+  inst->file = file;
   return next;
 }
 

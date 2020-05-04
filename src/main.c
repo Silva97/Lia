@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <getopt.h>
 #include "lia/lia.h"
@@ -12,6 +13,7 @@ void show_help(void);
 int main(int argc, char **argv)
 {
   int opt;
+  bool pretty = false;
   char *outname = DEF_OUT;
   
   if (argc <= 1) {
@@ -22,13 +24,16 @@ int main(int argc, char **argv)
   lia_t *lia = calloc(1, sizeof *lia);
   lia->pathlist = calloc( 1, sizeof (path_t) );
 
-  while ( (opt = getopt(argc, argv, "I:o:h")) > 0 ) {
+  while ( (opt = getopt(argc, argv, "I:o:ph")) > 0 ) {
     switch (opt) {
     case 'I':
       path_insert(lia->pathlist, optarg);
       break;
     case 'o':
       outname = optarg;
+      break;
+    case 'p':
+      pretty = true;
       break;
     case 'h':
       show_help();
@@ -58,10 +63,17 @@ int main(int argc, char **argv)
 
     lia_process(argv[i], input, lia);
     if (lia->errcount)
-      break;
+      return lia->errcount;
   }
 
-  return lia->errcount;
+  FILE *output = fopen(outname, "w");
+  if ( !output ) {
+    fprintf(stderr, "Error: The file '%s' could not be opened for writing.\n", outname);
+    return EXIT_FAILURE;
+  }
+
+  lia_compiler(output, lia, pretty);
+  return 0;
 }
 
 
@@ -73,6 +85,7 @@ void show_help(void)
 
     "Usage: lia [options] source1.lia source2.lia ...\n"
     "  -o     Specify the output name. (Default: \"" DEF_OUT "\")\n"
+    "  -p     (pretty) If specified, adds comments to the output code.\n"
     "  -I     Define a path to search files in import. It's possible\n"
     "         use multiple times to set more paths.\n"
     "  -h     Show this help message."

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <getopt.h>
+#include <sys/stat.h>
 #include "lia/lia.h"
 #include "filepath.h"
 
@@ -77,6 +78,11 @@ int main(int argc, char **argv)
   }
 
   lia_compiler(output, lia, pretty);
+
+#ifndef _WIN32
+  chmod(outname, S_IRWXU);
+#endif
+
   return 0;
 }
 

@@ -48,6 +48,12 @@ token_t *lia_lexer(char *filename, FILE *input)
       column++;
     } while ( isblank(ch) );
 
+    if (ch == '#') {
+      do {
+        ch = getc(input);
+      } while (ch != '\n');
+    }
+
     this->line = line;
     this->column = column;
 

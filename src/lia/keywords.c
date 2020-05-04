@@ -159,7 +159,7 @@ static token_t *key_op1id(KEY_ARGS,  inst_type_t type)
 {
   tk = tk->next;
 
-  if (tk->type != TK_ID) {
+  if ( tk->type != TK_ID || isreg(tk) ) {
     lia_error(file->filename, tk->line, tk->column,
       "Expected a procedure name, instead have `%s'", tk->text);
     return NULL;

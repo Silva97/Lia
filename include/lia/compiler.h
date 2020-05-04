@@ -11,7 +11,7 @@
 #define _LIA_COMPILER_H
 
 imp_t *lia_process(char *filename, FILE *input, lia_t *lia);
-void lia_compiler(FILE *output, lia_t *lia, int pretty);
-void lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia);
+int lia_compiler(FILE *output, lia_t *lia, int pretty);
+int lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty);
 
 #endif /* _LIA_COMPILER_H */

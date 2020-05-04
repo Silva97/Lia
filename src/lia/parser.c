@@ -60,7 +60,13 @@ int tkseq(token_t *tk, unsigned int number, ...)
   return -1;
 }
 
-
+/**
+ * @brief Inserts a instruction at end of inst_t.
+ * 
+ * @param list       The list to insert.
+ * @param type       The type of the instruction.
+ * @return inst_t*   Pointer to the new instruction.
+ */
 inst_t *inst_add(inst_t *list, inst_type_t type)
 {
   inst_t *last;
@@ -77,6 +83,30 @@ inst_t *inst_add(inst_t *list, inst_type_t type)
 
   list->type = type;
   return list;
+}
+
+/**
+ * @brief Free a instruction list.
+ * 
+ * @param list   The list to free.
+ */
+void inst_free(inst_t *list)
+{
+  inst_t *inst_next;
+  token_t *token_next;
+  token_t *this;
+
+  while (list) {
+    inst_next = list->next;
+
+    for (this = list->child; this; this = token_next) {
+      token_next = this->next;
+      free(this);
+    }
+
+    free(list);
+    list = inst_next;
+  }
 }
 
 /**

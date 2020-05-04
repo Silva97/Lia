@@ -34,6 +34,7 @@ token_t *key_endif(KEY_ARGS);
 
 int tkseq(token_t *tk, unsigned int number, ...);
 inst_t *inst_add(inst_t *list, inst_type_t type);
+void inst_free(inst_t *list);
 int lia_parser(lia_t *lia, imp_t *file);
 
 #endif /* _LIA_PARSER_H */

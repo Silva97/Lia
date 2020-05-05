@@ -1,4 +1,5 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Silva97/Lia)
+[![Build Status](https://travis-ci.com/Silva97/Lia.svg?branch=master)](https://travis-ci.com/Silva97/Lia)
 
 # Lia
 Lia is a assembly-like programming language compiled to

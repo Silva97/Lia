@@ -71,7 +71,13 @@ int main(int argc, char **argv)
       return lia->errcount;
   }
 
-  FILE *output = fopen(outname, "w");
+  FILE *output;
+
+  if ( !strcmp(outname, "-") )
+    output = stdout;
+  else
+    output = fopen(outname, "w");
+
   if ( !output ) {
     fprintf(stderr, "Error: The file '%s' could not be opened for writing.\n", outname);
     return EXIT_FAILURE;

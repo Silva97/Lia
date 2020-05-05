@@ -1,5 +1,10 @@
-CC=gcc
-CFLAGS=-O2 -std=c11 -I "include"
+CFLAGS=-O2         \
+	-pedantic-errors  \
+	-Wall            \
+	-Werror           \
+	-std=c11         \
+	-I "include"
+
 SRC=src/tree.c src/hash.c src/filepath.c src/lia/*.c
 BIN=lia
 INSTPATH=/usr/local/bin

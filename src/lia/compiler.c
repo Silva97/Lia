@@ -246,9 +246,8 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
     fputs("!>", output);
     break;
   case INST_POP:
-    putc('=', output);
+    fputs("<=", output);
     reg_compile(output, operands[0].reg, false);
-    putc('<', output);
     break;
   case INST_CALL:
     proc = tree_find(lia->proctree, hash(operands[0].procedure));

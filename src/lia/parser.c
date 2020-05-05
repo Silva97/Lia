@@ -141,7 +141,8 @@ int lia_parser(lia_t *lia, imp_t *file)
     [KEY_PROC] = key_proc,
     [KEY_ENDPROC] = key_endproc,
     [KEY_IF] = key_if,
-    [KEY_ENDIF] = key_endif
+    [KEY_ENDIF] = key_endif,
+    [KEY_SAY] = key_say
   };
 
   if ( !lia->proctree )

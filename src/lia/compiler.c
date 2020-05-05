@@ -337,6 +337,27 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
     free(ctx);
     putc('@', output);
     break;
+  case INST_SAY:
+    tk = inst->child->next;
+    for (int ch, i = 0; tk->text[i]; i++) {
+      if (tk->text[i] == '\\') {
+        i++;
+        ch = chresc(tk->text[i]);
+        if (ch < 0) {
+          lia_error(inst->file->filename, tk->line, tk->column + i + 1,
+            "Invalid escape '\%c' at string.", tk->text[i]);
+
+          lia->errcount++;
+          break;
+        }
+      } else {
+        ch = tk->text[i];
+      }
+
+      imm_compile(output, ch);
+      putc('1', output);
+    }
+    break;
   default:
     lia_error(inst->file->filename, inst->child->line, inst->child->column,
       "Sorry but my programmers not implemented `%s' yet!",
@@ -344,10 +365,12 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
     lia->errcount++;
   }
 
-  diff = ftell(output) - lastpos;
+  diff = 40 - (int) (ftell(output) - lastpos);
+  if (diff < 0)
+    diff = 2;
 
   if (pretty) {
-    fprintf(output, "%-*c# Line %04d: ", 40 - (int) diff,
+    fprintf(output, "%-*c# Line %04d: ", (int) diff,
       ' ', inst->child->line);
     
     if (inst->type == INST_IF) {
@@ -356,10 +379,17 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
     }
 
     for (token_t *tk = inst->child; tk; tk = tk->next) {
-      if (tk->type == TK_CHAR)
+
+      switch (tk->type) {
+      case TK_CHAR:
         fprintf(output, "'%s' ", tk->text);
-      else
+        break;
+      case TK_STRING:
+        fprintf(output, "\"%s\" ", tk->text);
+        break;
+      default:
         fprintf(output, "%s ", tk->text);
+      }
     }
 
     if (inst->type == INST_ENDPROC)

@@ -99,6 +99,7 @@ typedef enum inst_type {
   INST_IF,
   INST_IFBLOCK,
   INST_ENDIF,
+  INST_SAY,
   INST_CMD
 } inst_type_t;
 
@@ -170,7 +171,8 @@ typedef enum keyword {
   KEY_ENDPROC,
   KEY_PRTAB,
   KEY_IF,
-  KEY_ENDIF
+  KEY_ENDIF,
+  KEY_SAY
 } keyword_t;
 
 #endif /* _LIA_TYPES_H */

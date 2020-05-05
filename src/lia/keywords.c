@@ -46,6 +46,8 @@ keyword_t iskey(token_t *tk)
     return KEY_IF;
   if ( !strcmp(tk->text, "endif") )
     return KEY_ENDIF;
+  if ( !strcmp(tk->text, "say") )
+    return KEY_SAY;
   
   return KEY_NONE;
 }
@@ -297,4 +299,23 @@ token_t *key_if(KEY_ARGS)
 token_t *key_endif(KEY_ARGS)
 {
   return key_opnone(tk, file, lia, INST_ENDIF);
+}
+
+token_t *key_say(KEY_ARGS)
+{
+  tk = tk->next;
+
+  if (tk->type != TK_STRING) {
+    lia_error(file->filename, tk->line, tk->column,
+      "Expected a string, instead have `%s'", tk->text);
+    return NULL;
+  }
+  
+  token_t *next = tk->next;
+  inst_t *inst = inst_add(lia->instlist, INST_SAY);
+  inst->child = tk->last;
+  inst->file = file;
+  tk->next = NULL;
+
+  return next;
 }

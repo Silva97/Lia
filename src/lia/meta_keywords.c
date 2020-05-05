@@ -88,7 +88,8 @@ token_t *meta_new(KEY_ARGS)
       return NULL;
     }
 
-    if (strlen(tk->text) > 1 || strchr( REGLIST, tolower(tk->text[0]) ) ) {
+    if (strlen(tk->text) > 1 || strchr( REGLIST, tolower(tk->text[0]) ) ||
+        !( isupper(tk->text[0]) || islower(tk->text[0]) ) ) {
       lia_error(file->filename, tk->line, tk->column,
         "`%s' is a invalid argument name", tk->text);
       return NULL;

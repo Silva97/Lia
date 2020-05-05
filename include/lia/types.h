@@ -20,7 +20,7 @@
 #define CMD_ARGC 3
 
 /** List of register's names in Ases */
-#define REGLIST "abcdp"
+#define REGLIST "abcdefghijklp"
 
 /** The arguments of the keyword's function */
 #define KEY_ARGS  token_t *tk, imp_t *file, lia_t *lia

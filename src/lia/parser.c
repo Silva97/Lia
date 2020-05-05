@@ -69,7 +69,7 @@ int tkseq(token_t *tk, unsigned int number, ...)
  */
 inst_t *inst_add(inst_t *list, inst_type_t type)
 {
-  inst_t *last;
+  inst_t *last = list;
 
   while (list && list->child) {
     last = list;

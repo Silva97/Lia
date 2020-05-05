@@ -208,7 +208,7 @@ token_t *lia_lexer(char *filename, FILE *input)
 
     default:
       if ( isdigit(ch) ) {
-        int (*filter)(int);
+        int (*filter)(int) = isdigit;
         this->type = TK_IMMEDIATE;
         this->text[0] = ch;
 
@@ -218,8 +218,6 @@ token_t *lia_lexer(char *filename, FILE *input)
         if ( isalnum(ch) ) {
           if ( ch == 'x' || ch == 'X' ) {
             filter = isxdigit;
-          } else if ( isdigit(ch) ) {
-            filter = isdigit;
           }
 
           this->text[1] = ch;

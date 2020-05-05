@@ -70,7 +70,7 @@ test_t test_instlist(void)
   while (this) {
     printf("%d = %s ", this->type, this->child->text);
 
-    for (token_t *tk = this->child; tk = tk->next;)
+    for (token_t *tk = this->child; (tk = tk->next);)
       printf("%s ", tk->text);
 
     putchar('\n');
@@ -94,7 +94,7 @@ test_t test_cmdparsing(void)
   while (this) {
     printf("%d = %s ", this->type, this->child->text);
 
-    for (token_t *tk = this->child; tk = tk->next;)
+    for (token_t *tk = this->child; (tk = tk->next);)
       printf("%s ", tk->text);
 
     putchar('\n');

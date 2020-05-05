@@ -20,7 +20,7 @@
 #define OPREG(x)  { .reg = x }
 #define OPIMM(x)  { .imm = x }
 #define OPPROC(x) { .procedure = x }
-#define OPNULL    { .reg = 0 }
+#define OPNULL    { .reg = {0} }
 
 
 int reg_compile(FILE *output, char *reg, int get);

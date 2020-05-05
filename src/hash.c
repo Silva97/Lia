@@ -16,7 +16,7 @@
  * @param str              The string to hash
  * @return unsigned long   The hash result
  */
-unsigned long int hash(unsigned char *str)
+unsigned long int hash(char *str)
 {
   unsigned long int hash = 5381;
 

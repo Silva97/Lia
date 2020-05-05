@@ -12,11 +12,11 @@
 
 ##
 # Calling procedures with immediate arguments
-# ra = argument1
-# rb = argument2
+# rc = argument1
+# rd = argument2
 ##
-[new cl1 r:p x:i     = "XaR"]
-[new cl2 r:p x:i y:i = "XaYbR"]
+[new cl1 r:p x:i     = "XcR"]
+[new cl2 r:p x:i y:i = "XcYdR"]
 
 ##
 # ss = 0 if op1 is greater than op2.

@@ -3,8 +3,18 @@ compiler:
   - gcc
   - clang
 
+install:
+  - git clone https://github.com/Silva97/Ases
+  - cd Ases
+  - make
+  - sudo make install
+  - cd ..
+
+before_script: make
+
 script:
   - make test name=lexer
   - make test name=parser
   - make test name=cmd
   - make test name=procedure
+  - bash test_modules.sh

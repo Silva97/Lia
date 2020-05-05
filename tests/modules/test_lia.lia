@@ -1,0 +1,49 @@
+[import "modules/lia"]
+
+set rc, 9
+set rd, 11
+call mul
+
+isub rc, 2
+call toupper
+out rc           # A
+
+cl1 tolower, 'B'
+out rc           # b
+
+set rc, 5
+igrt rc, 6
+ifnz iout 'c'    # c
+
+igrt rc, 4
+ifz iout 'd'     # d
+
+iout '\n'
+
+
+
+
+proc toupper
+  isub rc, 32
+endproc
+
+proc tolower
+  iadd rc, 32
+endproc
+
+# rc *= rd
+proc mul
+  push rd
+  
+  mov ss, rd
+  ifnz
+    mov rb, rc
+    do
+      add rc, rb
+      dec rd
+      iequ rd, 1
+    whilenz
+  endif
+
+  pop rd
+endproc

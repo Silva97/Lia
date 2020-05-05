@@ -1,0 +1,34 @@
+[import "modules/lia",
+        "modules/var"]
+
+push 'f'
+push 'Z'
+alloc 3
+push 'a'
+
+setvar 0, 'b'
+setvar 1, 'c'
+setvar 2, 'd'
+setvar 4, 'e'
+
+call test
+pop ra
+out ra
+
+outvar 0
+outvar 1
+outvar 2
+
+free 3
+pop ra
+pop rb
+out ra
+out rb
+
+iout '\n'
+
+proc test
+  alloc 1
+  setvar 0, 'T'
+  free 1
+endproc

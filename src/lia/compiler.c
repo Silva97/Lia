@@ -91,9 +91,9 @@ imp_t *lia_process(char *filename, FILE *input, lia_t *lia)
 int lia_compiler(FILE *output, lia_t *lia, int pretty)
 {
   inst_t *first;
-  inst_t *last;
   inst_t *next;
   inst_t *this = lia->instlist;
+  inst_t *last = this;
 
   fputs("#!/usr/bin/env ases\n"
         "# Lia " LIA_TAG "\n\n",
@@ -209,6 +209,11 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
       break;
     case TK_STRING:
       operands[i].string = tk;
+      break;
+    default:
+      lia_error(inst->file->filename, tk->line, tk->column,
+        "Unexpected token `%s'.", tk->text);
+      lia->errcount++;
       break;
     }
 

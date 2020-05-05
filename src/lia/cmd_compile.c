@@ -88,7 +88,7 @@ int str_compile(char *filename, FILE *output, token_t *tk)
       ch = chresc(tk->text[i]);
       if (ch < 0) {
         lia_error(filename, tk->line, tk->column + i + 1,
-          "Invalid escape '\%c' at string.", tk->text[i]);
+          "Invalid escape '\\%c' at string.", tk->text[i]);
 
         return 1;
       }

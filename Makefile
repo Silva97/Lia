@@ -7,6 +7,9 @@ INSTPATH=/usr/local/bin
 all:
 	$(CC) $(CFLAGS) $(SRC) src/main.c -o $(BIN)
 
+doc:
+	doxygen
+
 install:
 	mkdir -p ~/.lia
 	cp $(BIN) $(INSTPATH)/

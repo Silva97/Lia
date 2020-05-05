@@ -23,10 +23,12 @@
 #define OPNULL    { .reg = 0 }
 
 
-cmd_t *lia_cmd_new(cmd_t *tree, char *name, cmd_arg_t *args, char *body);
 int reg_compile(FILE *output, char *reg, int get);
 void imm_compile(FILE *output, uint8_t imm);
+int str_compile(char *filename, FILE *output, token_t *tk);
 int isreg(token_t *tk);
-int lia_cmd_compile(proc_t *proctree, FILE *output, cmd_t *cmd, operand_t *ops);
+
+cmd_t *lia_cmd_new(cmd_t *tree, char *name, cmd_arg_t *args, char *body);
+int lia_cmd_compile(proc_t *proctree, char *filename, FILE *output, cmd_t *cmd, operand_t *ops);
 
 #endif /* _LIA_CMD_H */

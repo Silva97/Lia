@@ -207,6 +207,9 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
         operands[i].procedure = tk->text;
       }
       break;
+    case TK_STRING:
+      operands[i].string = tk;
+      break;
     }
 
     if ( !tk->next )
@@ -220,7 +223,8 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
   switch (inst->type) {
   case INST_CMD:
     cmd = tree_find( lia->cmdtree, hash(inst->child->text) );
-    lia_cmd_compile(lia->proctree, output, cmd, operands);
+    lia_cmd_compile(lia->proctree, inst->file->filename,
+      output, cmd, operands);
     break;
   case INST_FUNC:
     putc(inst->child->next->text[0], output);
@@ -342,25 +346,7 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
     putc('@', output);
     break;
   case INST_SAY:
-    tk = inst->child->next;
-    for (int ch, i = 0; tk->text[i]; i++) {
-      if (tk->text[i] == '\\') {
-        i++;
-        ch = chresc(tk->text[i]);
-        if (ch < 0) {
-          lia_error(inst->file->filename, tk->line, tk->column + i + 1,
-            "Invalid escape '\%c' at string.", tk->text[i]);
-
-          lia->errcount++;
-          break;
-        }
-      } else {
-        ch = tk->text[i];
-      }
-
-      imm_compile(output, ch);
-      putc('1', output);
-    }
+    str_compile(inst->file->filename, output, inst->child->next);
     break;
   default:
     lia_error(inst->file->filename, inst->child->line, inst->child->column,

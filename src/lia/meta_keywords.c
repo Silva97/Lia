@@ -95,7 +95,7 @@ token_t *meta_new(KEY_ARGS)
       return NULL;
     }
 
-    char *find = strchr( "irp", tolower(tk->next->next->text[0]) );
+    char *find = strchr( "irps", tolower(tk->next->next->text[0]) );
     if ( !find || tk->next->next->text[1] ) {
       lia_error(file->filename, tk->next->next->line, tk->next->next->column,
         "`%s' is a invalid type name", tk->next->next->text);

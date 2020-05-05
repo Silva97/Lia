@@ -74,6 +74,7 @@ typedef union operand {
   char reg[5];
   uint8_t imm;
   char *procedure;
+  token_t *string;
 } operand_t;
 
 

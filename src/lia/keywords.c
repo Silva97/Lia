@@ -90,6 +90,14 @@ token_t *cmd_verify(KEY_ARGS)
         return NULL;
       }
       break;
+    case 's':
+      if ( tk->type != TK_STRING ) {
+        lia_error(file->filename, tk->line, tk->column,
+          "Command '%s' expects a string at operand %d.",
+          first->text, i+1);
+        return NULL;
+      }
+      break;
     }
 
     if (tk->next->type != TK_COMMA)

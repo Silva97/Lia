@@ -11,8 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include "lia/cmd.h"
-#include "lia/procedure.h"
+#include "lia/lia.h"
 
 /**
  * @brief Generate the code to get or set a register
@@ -73,6 +72,36 @@ void imm_compile(FILE *output, uint8_t imm)
   }
 }
 
+/**
+ * @brief Compiles a string at a sequence of output
+ * 
+ * @param filename  The filename.
+ * @param output    The file to writes the output
+ * @param tk        The token to reads the text.
+ * @return int      Return zero if all ok
+ */
+int str_compile(char *filename, FILE *output, token_t *tk)
+{
+  for (int ch, i = 0; tk->text[i]; i++) {
+    if (tk->text[i] == '\\') {
+      i++;
+      ch = chresc(tk->text[i]);
+      if (ch < 0) {
+        lia_error(filename, tk->line, tk->column + i + 1,
+          "Invalid escape '\%c' at string.", tk->text[i]);
+
+        return 1;
+      }
+    } else {
+      ch = tk->text[i];
+    }
+
+    imm_compile(output, ch);
+    putc('1', output);
+  }
+
+  return 0;
+}
 
 /**
  * @brief Verify if a token is a valid register name
@@ -108,7 +137,7 @@ int isreg(token_t *tk)
  * @return nonzero If all ok
  * @return 0       If error
  */
-int lia_cmd_compile(proc_t *proctree, FILE *output, cmd_t *cmd, operand_t *ops)
+int lia_cmd_compile(proc_t *proctree, char *filename, FILE *output, cmd_t *cmd, operand_t *ops)
 {
   int index;
   char *position;
@@ -138,6 +167,9 @@ int lia_cmd_compile(proc_t *proctree, FILE *output, cmd_t *cmd, operand_t *ops)
         break;
       case 'p':
         proc_call( output, proc_add(proctree, ops[index].procedure) );
+        break;
+      case 's':
+        str_compile(filename, output, ops[index].string);
         break;
       default:
         return 0;

@@ -9,21 +9,37 @@
 
 #define DEF_OUT "out.ases"
 
+#ifdef _WIN32
+# define GETMOD(x) snprintf(x, sizeof x - 1, \
+    "%s\\.lia\\modules", getenv("USERPROFILE"))
+#else
+# define GETMOD(x) snprintf(x, sizeof x - 1, \
+    "%s/.lia/modules", getenv("HOME"))
+#endif
+
 void show_help(void);
 
 int main(int argc, char **argv)
 {
+  char defmod[513];
   int opt;
   bool pretty = false;
   char *outname = DEF_OUT;
   
   if (argc <= 1) {
-    puts("Usage: lia [options] source1.lia source2.lia ...");
+    puts(
+      "Lia " LIA_TAG "\n"
+      "Usage: lia [options] source1.lia source2.lia ..."
+    );
     return EXIT_SUCCESS;
   }
   
   lia_t *lia = calloc(1, sizeof *lia);
   lia->pathlist = calloc( 1, sizeof (path_t) );
+
+
+  GETMOD(defmod);
+  path_insert(lia->pathlist, defmod);
 
   while ( (opt = getopt(argc, argv, "I:o:ph")) > 0 ) {
     switch (opt) {
@@ -100,8 +116,9 @@ int main(int argc, char **argv)
 void show_help(void)
 {
   puts(
-    "Developed by Luiz Felipe (felipe.silva337@yahoo.com)\n"
-    "GitHub: https://github.com/Silva97/lia\n\n"
+    "Lia " LIA_TAG "\n"
+    "  Developed by Luiz Felipe (felipe.silva337@yahoo.com)\n"
+    "  GitHub: https://github.com/Silva97/Lia\n\n"
 
     "Usage: lia [options] source1.lia source2.lia ...\n"
     "  -o     Specify the output name. (Default: \"" DEF_OUT "\")\n"

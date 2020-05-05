@@ -21,5 +21,11 @@
 [new getvar  x:r v:i = "Pj KaVb5A-p =x Jp"]
 
 ## Sets the value of a variable ##
-[new setvar  v:i x:r = "Pj KaVb5A-p X! Jp"]
-[new isetvar v:i x:i = "Pj KaVb5A-p X! Jp"]
+[new movvar v:i x:r = "Pj KaVb5A-p X! Jp"]
+[new setvar v:i x:i = "Pj KaVb5A-p X! Jp"]
+
+## Prints the value of a variable ##
+[new outvar v:i = "Pj KaVb5A-p =1 Jp"]
+
+## Gets the input and set the variable ##
+[new invar v:i = "Pj KaVb5A-p 0! Jp"]

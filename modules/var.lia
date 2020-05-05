@@ -18,14 +18,14 @@
 [new free x:i = "KaXb5Ap =k"]
 
 ## Gets the value of a variable in the stack frame ##
-[new getvar  x:r v:i = "Pj KaVb5A-p =x Jp"]
+[new getvar  x:r v:i = "Pb KaV5A-p =x Bp"]
 
 ## Sets the value of a variable ##
-[new movvar v:i x:r = "Pj KaVb5A-p X! Jp"]
-[new setvar v:i x:i = "Pj KaVb5A-p X! Jp"]
+[new movvar v:i x:r = "Pb KaV5A-p X! Bp"]
+[new setvar v:i x:i = "Pb KaV5A-p X! Bp"]
 
 ## Prints the value of a variable ##
-[new outvar v:i = "Pj KaVb5A-p =1 Jp"]
+[new outvar v:i = "Pb KaV5A-p =1 Bp"]
 
 ## Gets the input and set the variable ##
-[new invar v:i = "Pj KaVb5A-p 0! Jp"]
+[new invar v:i = "Pb KaV5A-p 0! Bp"]

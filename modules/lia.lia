@@ -19,12 +19,16 @@
 [new cl2 r:p x:i y:i = "XaYbR"]
 
 ##
-# Compare the operands
+# ss = 0 if op1 is greater than op2.
 # if op1 >  op2: ss = 0
 # if op1 <= op2: ss = 1
 ##
-[new cmp  x:r y:r = "Y!Xa=b9"]
-[new icmp x:r y:i = "XaYb9"]
+[new grt  x:r y:r = "Y!Xa=b9"]
+[new igrt x:r y:i = "XaYb9"]
+
+## ss = 0 if the values are equal ##
+[new equ  x:r y:r = "XaY5A"]
+[new iequ x:r y:i = "XaY5A"]
 
 ## Takes the input and store it in the op1 ##
 [new in x:r = "0x"]
@@ -45,12 +49,12 @@
 [new mov x:r y:r = "Yx"]
 
 ## Adds to op1 the value of op2 ##
-[new add  x:r y:r = "Y!Xa=b4Ax"]
-[new iadd x:r y:i = "XaYb4Ax"]
+[new add  x:r y:r = "XaY4Ax"]
+[new iadd x:r y:i = "XaY4Ax"]
 
 ## Subtracts op1 the value of op2 ##
-[new sub  x:r y:r = "Y!Xa=b5Ax"]
-[new isub x:r y:i = "XaYb5Ax"]
+[new sub  x:r y:r = "XaY5Ax"]
+[new isub x:r y:i = "XaY5Ax"]
 
 ## Increments the value of op1 ##
 [new inc x:r = "X+x"]

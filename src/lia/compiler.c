@@ -270,8 +270,12 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
     }
 
     proc_ret(output, lia->inproc);
-    if (inst->child->next)
-      imm_compile(output, operands[0].imm);
+    if (inst->child->next) {
+      if (inst->child->next->type == TK_ID)
+        reg_compile(output, operands[0].reg, true);
+      else
+        imm_compile(output, operands[0].imm);
+    }
     putc('*', output);
     break;
   case INST_PROC:

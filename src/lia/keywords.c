@@ -251,12 +251,13 @@ token_t *key_ret(KEY_ARGS)
   token_t *next;
   tk = tk->next;
 
-  if (tk->type == TK_IMMEDIATE) {
+  if (tk->type == TK_IMMEDIATE || tk->type == TK_CHAR || isreg(tk) ) {
     next = tk->next;
     tk->next = NULL;
   } else if (tk->type != TK_SEPARATOR && tk->type != TK_EOF) {
     lia_error(file->filename, tk->line, tk->column,
-      "Expected a literal number, instead have `%s'", tk->text);
+      "Expected a literal number or register name, instead have `%s'",
+      tk->text);
     return NULL;
   } else {
     next = tk;

@@ -308,7 +308,7 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
     }
 
     proc_ret(output, lia->inproc);
-    fputs(".*@D+!>", output);
+    fputs(".*@L+!>", output);
     lia->inproc = NULL;
     break;
   case INST_IF:

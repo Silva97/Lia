@@ -29,16 +29,10 @@ int reg_compile(FILE *output, char *reg, int get)
   if ( !strcmp(reg, "ss") )
     return 1;
   
-  if ( !strcmp(reg, "ra") ) {
-    result = 'a';
-  } else if ( !strcmp(reg, "rb") ) {
-    result = 'b';
-  } else if ( !strcmp(reg, "rc") ) {
-    result = 'c';
-  } else if ( !strcmp(reg, "rd") ) {
-    result = 'd';
-  } else if ( !strcmp(reg, "dp") ) {
+  if ( !strcmp(reg, "dp") ) {
     result = 'p';
+  } else if (reg[0] == 'r'){
+    result = reg[1];
   } else {
     return 0;
   }
@@ -95,14 +89,11 @@ int isreg(token_t *tk)
     return 1;
   if ( !strcmp(tk->text, "dp") )
     return 1;
-  if ( !strcmp(tk->text, "ra") )
-    return 1;
-  if ( !strcmp(tk->text, "rb") )
-    return 1;
-  if ( !strcmp(tk->text, "rc") )
-    return 1;
-  if ( !strcmp(tk->text, "rd") )
-    return 1;
+  
+  if (tk->text[0] == 'r') {
+    if (tk->text[1] >= 'a' && tk->text[1] <= 'l')
+      return 1;
+  }
 
   return 0;
 }

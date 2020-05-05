@@ -5,7 +5,7 @@ push  ra
 push  23
 store 77
 store rb
-store re
+store xx
 
 load ra
 load 10

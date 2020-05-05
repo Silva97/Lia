@@ -16,8 +16,8 @@
 /** First index of a procedure */
 #define PROCINDEX 2
 
-#define PROC_CALL1 "$D!>Pd.pD!"
-#define PROC_CALL2 "=d.p=p*"
+#define PROC_CALL1 "$L!>Pl.pL!"
+#define PROC_CALL2 "=l.p=p*"
 
 /** The number of instructions after $
  * 

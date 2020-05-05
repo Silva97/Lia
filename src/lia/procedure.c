@@ -77,5 +77,5 @@ void proc_ret(FILE *output, proc_t *proc)
       putc('+', output);
   }
 
-  fputs("d", output);
+  fputs("l", output);
 }

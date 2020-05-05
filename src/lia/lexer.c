@@ -49,6 +49,8 @@ int chresc(int c)
     return '\v';
   case 'f':
     return '\f';
+  case 'e':
+    return '\x1b';
   case '0':
     return '\0';
   default:

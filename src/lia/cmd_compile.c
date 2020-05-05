@@ -91,7 +91,7 @@ int isreg(token_t *tk)
     return 1;
   
   if (tk->text[0] == 'r') {
-    if (tk->text[1] >= 'a' && tk->text[1] <= 'l')
+    if (tk->text[1] >= 'a' && tk->text[1] <= 'l' && !tk->text[2])
       return 1;
   }
 

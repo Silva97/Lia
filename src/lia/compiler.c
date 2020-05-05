@@ -128,7 +128,7 @@ int lia_compiler(FILE *output, lia_t *lia, int pretty)
     this = lia_inst_compile(output, this, lia, pretty);
     next = this->next;
 
-    if ( !last )
+    if ( last == lia->instlist )
       lia->instlist = this->next;
     else
       last->next = this->next;

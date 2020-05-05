@@ -169,6 +169,7 @@ int lia_compiler(FILE *output, lia_t *lia, int pretty)
     }
   }
 
+  fputs(".3\n", output);
   return lia->errcount;
 }
 

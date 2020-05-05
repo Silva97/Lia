@@ -89,27 +89,27 @@ test_t test_cmdcompile(void)
   lia_cmd_new(tree, "set",   (CMDT){ {'X', 'r'}, {'Y', 'i'}, CMDNULL }, "Yx");
   lia_cmd_new(tree, "call2", (CMDT){ {'X', 'p'}, CMDNULL, CMDNULL },    "XX");
 
-  ret = lia_cmd_compile(proctree, stdout, tree_find(tree, hash("add")),
+  ret = lia_cmd_compile(proctree, "test", stdout, tree_find(tree, hash("add")),
     (OPT){ OPREG("rb"), OPREG("ra"), OPNULL });
   putchar('\n');
   
   if ( !ret )
     METRIC_TEST_FAIL("add instruction failed");
 
-  ret = lia_cmd_compile(proctree, stdout, tree_find(tree, hash("set")),
+  ret = lia_cmd_compile(proctree, "test", stdout, tree_find(tree, hash("set")),
     (OPT){ OPREG("rc"), OPIMM(29), OPNULL });
   putchar('\n');
   
   if ( !ret )
     METRIC_TEST_FAIL("set instruction failed");
 
-  ret = lia_cmd_compile(proctree, stdout, tree_find(tree, hash("call2")),
+  ret = lia_cmd_compile(proctree, "test", stdout, tree_find(tree, hash("call2")),
     (OPT){ OPPROC("test"), OPNULL, OPNULL });
   putchar('\n');
-  ret += lia_cmd_compile(proctree, stdout, tree_find(tree, hash("call2")),
+  ret += lia_cmd_compile(proctree, "test", stdout, tree_find(tree, hash("call2")),
     (OPT){ OPPROC("proc2"), OPNULL, OPNULL });
   putchar('\n');
-  ret += lia_cmd_compile(proctree, stdout, tree_find(tree, hash("call2")),
+  ret += lia_cmd_compile(proctree, "test", stdout, tree_find(tree, hash("call2")),
     (OPT){ OPPROC("test"), OPNULL, OPNULL });
   putchar('\n');
 

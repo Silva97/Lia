@@ -1,0 +1,64 @@
+#####
+# Developed by Luiz Felipe <felipe.silva337@yahoo.com>
+# Date: 2020-05-04
+# GitHub: https://github.com/Silva97
+# Distributed under the MIT License.
+#
+# This module is the main module of the Lia language that defines commands
+# to do basic operations.
+#####
+
+
+
+##
+# Calling procedures with immediate arguments
+# ra = argument1
+# rb = argument2
+##
+[new cl1 r:p x:i     = "XaR"]
+[new cl2 r:p x:i y:i = "XaYbR"]
+
+##
+# Compare the operands
+# if op1 >  op2: ss = 0
+# if op1 <= op2: ss = 1
+##
+[new cmp  x:r y:r = "Y!Xa=b9"]
+[new icmp x:r y:i = "XaYb9"]
+
+## Takes the input and store it in the op1 ##
+[new in x:r = "0x"]
+
+## Outputs the op1 ##
+[new out  x:r = "X1"]
+[new iout x:i = "X1"]
+
+## Exit the program with exit status at op1 ##
+[new exit  x:r = "X3"]
+[new iexit x:i = "X3"]
+
+
+## Sets the value of the register to a immediate operand ##
+[new set x:r y:i = "Yx"]
+
+## Copy the value of op2 to op1 ##
+[new mov x:r y:r = "Yx"]
+
+## Adds to op1 the value of op2 ##
+[new add  x:r y:r = "Y!Xa=b4Ax"]
+[new iadd x:r y:i = "XaYb4Ax"]
+
+## Subtracts op1 the value of op2 ##
+[new sub  x:r y:r = "Y!Xa=b5Ax"]
+[new isub x:r y:i = "XaYb5Ax"]
+
+## Increments the value of op1 ##
+[new inc x:r = "X+x"]
+
+## Decrements the value of op1 ##
+[new dec x:r = "X-x"]
+
+## do..while block for loops. ##
+[new do      = "$L!>"]
+[new whilez  = "!<=l>=<?*"]
+[new whilenz = "!<=l>=<~*"]

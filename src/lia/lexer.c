@@ -25,6 +25,38 @@ static int isstrvalid(int c)
 }
 
 /**
+ * @brief Escape the character
+ * 
+ * @param c 
+ * @return int  -1 if no valid escape.
+ */
+int chresc(int c)
+{
+  switch (c) {
+  case '\\':
+    return '\\';
+  case 'n':
+    return '\n';
+  case 'r':
+    return '\r';
+  case 'b':
+    return '\b';
+  case 't':
+    return '\t';
+  case 'a':
+    return '\a';
+  case 'v':
+    return '\v';
+  case 'f':
+    return '\f';
+  case '0':
+    return '\0';
+  default:
+    return -1;
+  }
+}
+
+/**
  * @brief Do lexical analyze of a Lia code.
  * 
  * @param input      Input file to read the code.
@@ -106,37 +138,16 @@ token_t *lia_lexer(char *filename, FILE *input)
       ch = getc(input);
 
       if (ch == '\\') {
-        switch ( (ch = getc(input)) ) {
-          case 'n':
-            this->value = '\n';
-            break;
-          case 'r':
-            this->value = '\r';
-            break;
-          case 'b':
-            this->value = '\b';
-            break;
-          case 't':
-            this->value = '\t';
-            break;
-          case 'a':
-            this->value = '\a';
-            break;
-          case 'v':
-            this->value = '\v';
-            break;
-          case 'f':
-            this->value = '\f';
-            break;
-          case '0':
-            this->value = '\0';
-            break;
-          default:
-            lia_error(filename, line, column, "'\\%c' is not a valid escape character", ch);
-            tkfree(first);
-            return NULL;
+        ch = getc(input);
+        int esc = chresc(ch);
+        
+        if (esc < 0) {
+          lia_error(filename, line, column, "'\\%c' is not a valid escape character", ch);
+          tkfree(first);
+          return NULL;
         }
 
+        this->value = esc;
         this->text[0] = '\\';
         this->text[1] = ch;
         column += 2;

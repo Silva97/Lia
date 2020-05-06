@@ -98,6 +98,9 @@ int lia_compiler(FILE *output, lia_t *lia, int pretty)
         "# Lia " LIA_TAG "\n\n",
         output);
   
+  if ( !this->child )
+    return lia->errcount;
+  
   // Reserving space at start of the memory.
   for (int i = 0; i < PROCINDEX; i++)
     putc('>', output);

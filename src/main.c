@@ -100,8 +100,10 @@ int main(int argc, char **argv)
   }
 
   if ( lia_compiler(output, lia, pretty) ) {
-    fclose(output);
-    remove(outname);
+    if (output != stdout) {
+      fclose(output);
+      remove(outname);
+    }
     return lia->errcount;
   }
 

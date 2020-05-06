@@ -90,7 +90,6 @@ imp_t *lia_process(char *filename, FILE *input, lia_t *lia)
  */
 int lia_compiler(FILE *output, lia_t *lia, int pretty)
 {
-  inst_t *first;
   inst_t *next;
   inst_t *this = lia->instlist;
   inst_t *last = this;
@@ -113,8 +112,6 @@ int lia_compiler(FILE *output, lia_t *lia, int pretty)
       next = this->next;
       continue;
     }
-    
-    first = this;
 
     while (this->type != INST_ENDPROC) {
       this = lia_inst_compile(output, this, lia, pretty);
@@ -134,7 +131,6 @@ int lia_compiler(FILE *output, lia_t *lia, int pretty)
       last->next = this->next;
 
     this->next = NULL;
-    inst_free(first);
   }
 
   this = lia->instlist;

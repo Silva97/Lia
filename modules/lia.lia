@@ -48,6 +48,9 @@
 ## Copy the value of op2 to op1 ##
 [new mov x:r y:r = "Yx"]
 
+## Change the value of op1 and op2 ##
+[new chg x:r y:r = "Y!Xy=x"]
+
 ## Adds to op1 the value of op2 ##
 [new add  x:r y:r = "XaY4Ax"]
 [new iadd x:r y:i = "XaY4Ax"]
@@ -61,6 +64,18 @@
 
 ## Decrements the value of op1 ##
 [new dec x:r = "X-x"]
+
+## Multiplies op1 by op2 ##
+[new mul  x:r y:r = "Y!Xab.x=?(-! $B4 =-!~*Ax@"]
+[new imul x:r y:i = "Y!Xab.x=?(-! $B4 =-!~*Ax@"]
+
+##
+# Divide op1 by op2
+# op1 = result
+# ra = modulus
+##
+[new div  x:r y:r = "Y!Xa=b?2 .!$B5=+!9?*=x A!B5A~(X+x@A?(=a@"]
+[new idiv x:r y:i = "XaYb?2 .!$B5=+!9?*=x A!B5A~(X+x@A?(=a@"]
 
 ## do..while block for loops. ##
 [new do      = "$L!>"]

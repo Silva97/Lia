@@ -60,6 +60,42 @@ int chresc(int c)
 }
 
 /**
+ * @brief Converts the text to a matched token type.
+ * 
+ * @param name           The name do convert.
+ * @return token_type_t  -1 if not match.
+ */
+token_type_t name2tktype(char *name)
+{
+  if ( !strcmp(name, ":SEPARATOR:") )
+    return TK_SEPARATOR;
+  if ( !strcmp(name, "[") )
+    return TK_OPENBRACKET;
+  if ( !strcmp(name, "]") )
+    return TK_CLOSEBRACKET;
+  if ( !strcmp(name, "(") )
+    return TK_OPENPARENS;
+  if ( !strcmp(name, ")") )
+    return TK_CLOSEPARENS;
+  if ( !strcmp(name, ":") )
+    return TK_COLON;
+  if ( !strcmp(name, ",") )
+    return TK_COMMA;
+  if ( !strcmp(name, "=") )
+    return TK_EQUAL;
+  if ( !strcmp(name, "id") )
+    return TK_ID;
+  if ( !strcmp(name, "imm") )
+    return TK_IMMEDIATE;
+  if ( !strcmp(name, "char") )
+    return TK_CHAR;
+  if ( !strcmp(name, "str") )
+    return TK_STRING;
+  
+  return -1;
+}
+
+/**
  * @brief Do lexical analyze of a Lia code.
  * 
  * @param input      Input file to read the code.
@@ -118,6 +154,16 @@ token_t *lia_lexer(char *filename, FILE *input)
     case ']':
       this->type = TK_CLOSEBRACKET;
       strcpy(this->text, "]");
+      break;
+    
+    case '(':
+      this->type = TK_OPENPARENS;
+      strcpy(this->text, "(");
+      break;
+    
+    case ')':
+      this->type = TK_CLOSEPARENS;
+      strcpy(this->text, ")");
       break;
 
     case '=':

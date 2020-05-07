@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "metric.h"
-#include "lia/lexer.h"
+#include "lia/lia.h"
 
 #define TESTFILE  "tests/code.lia"
 

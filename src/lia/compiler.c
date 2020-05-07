@@ -147,9 +147,11 @@ int lia_compiler(FILE *output, lia_t *lia, int pretty)
   }
 
   if (lia->inproc) {
-    lia_error(this->file->filename, lia->thisproc->line, lia->thisproc->column,
+    this = lia->thisproc;
+
+    lia_error(this->file->filename, this->child->line, this->child->column,
       "Unexpected end-of-file inside procedure '%s'.",
-      lia->thisproc->next->text);
+      this->child->next->text);
     lia->errcount++;
   }
 
@@ -304,7 +306,7 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
     }
 
     lia->inproc = proc_add(lia->proctree, operands[0].procedure);
-    lia->thisproc = inst->child;
+    lia->thisproc = inst;
     fputs("$(", output);
     break;
   case INST_ENDPROC:

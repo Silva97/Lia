@@ -146,7 +146,7 @@ typedef struct lia {
   
   ctx_t *ctx;        /**< Context for blocks instructions. */
   proc_t *inproc;    /**< Define context inside a procedure. */
-  token_t *thisproc;
+  inst_t *thisproc;
   unsigned int errcount;
 } lia_t;
 

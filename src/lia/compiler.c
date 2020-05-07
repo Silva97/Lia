@@ -57,7 +57,7 @@ ctx_t *lia_ctx_pop(lia_t *lia)
  * 
  * @param filename   The file's name
  * @param input      The input to read the code
- * @return lia_t*    The Lia struct with the processed content
+ * @return imp_t*    The imp_t* of the processed file.
  */
 imp_t *lia_process(char *filename, FILE *input, lia_t *lia)
 {

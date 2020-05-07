@@ -15,6 +15,7 @@ before_script: make
 script:
   - make test name=lexer
   - make test name=parser
+  - make test name=compiler
   - make test name=cmd
   - make test name=procedure
   - bash test_modules.sh

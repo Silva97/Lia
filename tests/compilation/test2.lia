@@ -1,0 +1,4 @@
+# 1 Testing opened procedure
+
+proc test
+  say "Hello!\n"

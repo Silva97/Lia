@@ -17,6 +17,5 @@
 int chresc(int c);
 
 token_t *lia_lexer(char *filename, FILE *input);
-void tkfree(token_t *tk);
 
 #endif /* _LIA_LEXER_H */

@@ -1,9 +1,10 @@
 #ifndef _LIA_H
 #define _LIA_H
 
-#define LIA_TAG "v0.1"
+#define LIA_TAG "v0.2"
 
 #include "lia/types.h"
+#include "lia/free.h"
 #include "lia/error.h"
 #include "lia/lexer.h"
 #include "lia/cmd.h"

@@ -10,6 +10,7 @@
 #ifndef _LIA_TYPES_H
 #define _LIA_TYPES_H
 
+#include <stdio.h>
 #include <inttypes.h>
 #include "tree.h"
 

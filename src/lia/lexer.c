@@ -13,6 +13,7 @@
 #include <string.h>
 #include "lia/lexer.h"
 #include "lia/error.h"
+#include "lia/free.h"
 
 static int istkid(int c)
 {
@@ -295,22 +296,4 @@ token_t *lia_lexer(char *filename, FILE *input)
     this->next = new;
     this = new;
   }
-}
-
-/**
- * @brief Free a token list
- * 
- * @param tk   Pointer to the first item in the list
- */
-void tkfree(token_t *tk)
-{
-  if ( !tk )
-    return;
-
-  while (tk->next) {
-    tk = tk->next;
-    free(tk->last);
-  }
-
-  free(tk);
 }

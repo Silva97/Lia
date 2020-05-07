@@ -97,7 +97,7 @@ static int metric_count_tests_ok   = 0;
 #define METRIC_CALL(times, call, ...) {                            \
   clock_t metric_clock_start = clock();                             \
   for (int metric_count = 0; metric_count < times; metric_count++) \
-    call(args);                                                     \
+    call(__VA_ARGS__);                                              \
   METRIC_DISPLAY(#call "(" #__VA_ARGS__ ") x " #times,             \
     metric_clock_start, clock());                                   \
 }

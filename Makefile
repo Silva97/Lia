@@ -10,7 +10,10 @@ BIN=lia
 INSTPATH=/usr/local/bin
 
 all:
-	$(CC) $(CFLAGS) $(SRC) src/main.c -o $(BIN)
+	$(CC) $(CFLAGS) -DNDEBUG $(SRC) src/main.c -o $(BIN)
+
+debug:
+	$(CC) $(CFLAGS) -ggdb $(SRC) src/main.c -o $(BIN)
 
 doc:
 	doxygen

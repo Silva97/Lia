@@ -213,7 +213,7 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
       break;
     default:
       lia_error(inst->file->filename, tk->line, tk->column,
-        "Unexpected token `%s'.", tk->text);
+        "Unexpected token `%s' at operand %d.", tk->text, i);
       lia->errcount++;
       break;
     }

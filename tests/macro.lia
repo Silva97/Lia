@@ -15,4 +15,7 @@ name()
 name
 name(1)
 
+[macro ln(txt: str) = txt; say "\n"]
+say ln("Hi World!")
+
 func 8

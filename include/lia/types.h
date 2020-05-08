@@ -53,7 +53,9 @@ typedef enum token_type {
   TK_QUESTION,
   TK_IMMEDIATE,
   TK_CHAR,
-  TK_STRING
+  TK_STRING,
+  TK_ANY,
+  TK_REGISTER
 } token_type_t;
 
 /** Structure of a token */

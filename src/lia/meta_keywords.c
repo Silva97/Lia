@@ -113,11 +113,28 @@ token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
         }
       }
 
-      if (this->type != tk->type) {
-        lia_error(file->filename, tk->line, tk->column,
-          "Expected `%s' token, instead have: `%s'", tktype2name(this->type),
-          tk->text);
-        return NULL;
+      switch (this->type) {
+      case TK_ANY:
+        if (tk->type != TK_IMMEDIATE && tk->type != TK_CHAR) {
+          lia_error(file->filename, tk->line, tk->column,
+            "Expected a literal number or character, instead have: `%s'", tk->text);
+          return NULL;
+        }
+        break;
+      case TK_REGISTER:
+        if ( !isreg(tk) ) {
+          lia_error(file->filename, tk->line, tk->column,
+            "Expected a register name, instead have: `%s'", tk->text);
+          return NULL;
+        }
+        break;
+      default:
+        if (this->type != tk->type) {
+          lia_error(file->filename, tk->line, tk->column,
+            "Expected `%s' token, instead have: `%s'", tktype2name(this->type),
+            tk->text);
+          return NULL;
+        }
       }
 
       if (this->name) {

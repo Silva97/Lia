@@ -5,7 +5,7 @@ CFLAGS=-O2         \
 	-std=c11         \
 	-I "include"
 
-SRC=src/tree.c src/hash.c src/filepath.c src/lia/*.c
+SRC=src/tree.c src/hash.c src/filepath.c src/lia/*.c src/lia/meta/*.c
 BIN=lia
 INSTPATH=/usr/local/bin
 

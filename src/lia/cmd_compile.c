@@ -9,6 +9,7 @@
  * 
  */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include "lia/lia.h"
@@ -82,6 +83,13 @@ void imm_compile(FILE *output, uint8_t imm)
  */
 int str_compile(char *filename, FILE *output, token_t *tk)
 {
+  int index;
+  int diff;
+  int chone[] = {'+', '-'};
+  int chten[] = {'6', '7'};
+  int last = 0;
+  putc('.', output);
+
   for (int ch, i = 0; tk->text[i]; i++) {
     if (tk->text[i] == '\\') {
       i++;
@@ -96,8 +104,29 @@ int str_compile(char *filename, FILE *output, token_t *tk)
       ch = tk->text[i];
     }
 
-    imm_compile(output, ch);
+    diff = abs(last - ch);
+    if ( !diff ) {
+      putc('1', output);
+      continue;
+    }
+
+    index = (last > ch);
+    for (int i = 0; i < diff/10; i++)
+      putc(chten[index], output);
+    
+    unsigned int total = diff%10;
+    if (total > 5) {
+      putc(chten[index], output);
+
+      for (int i = 10 - total; i > 0; i--)
+        putc(chone[ !index ], output);
+    } else {
+      for (int i = total; i > 0; i--)
+        putc(chone[index], output);
+    }
+  
     putc('1', output);
+    last = ch;
   }
 
   return 0;

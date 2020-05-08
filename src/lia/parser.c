@@ -102,7 +102,8 @@ int lia_parser(lia_t *lia, imp_t *file)
 
   token_t *( *metakeys[] )(KEY_ARGS) = {
     [META_NEW] = meta_new,
-    [META_IMPORT] = meta_import
+    [META_IMPORT] = meta_import,
+    [META_MACRO] = meta_macro
   };
 
   token_t *( *keys[] )(KEY_ARGS) = {
@@ -125,6 +126,8 @@ int lia_parser(lia_t *lia, imp_t *file)
     lia->proctree = calloc(1, sizeof (proc_t));
   if ( !lia->cmdtree )
     lia->cmdtree = calloc(1, sizeof (cmd_t));
+  if ( !lia->macrotree )
+    lia->macrotree = calloc(1, sizeof (macro_t));
   if ( !lia->instlist )
     lia->instlist = calloc(1, sizeof (inst_t));
 

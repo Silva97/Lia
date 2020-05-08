@@ -95,6 +95,7 @@ int lia_parser(lia_t *lia, imp_t *file)
 {
   metakeyword_t meta;
   keyword_t key;
+  token_t *tk;
   token_t *next;
   token_t *this = file->tklist;
   int errcount = 0;
@@ -195,6 +196,14 @@ int lia_parser(lia_t *lia, imp_t *file)
         break;
       }
 
+      tk = this->next;
+      for (; tk->type != TK_SEPARATOR && tk->type != TK_EOF; tk = tk->next) {
+        next = macro_expand(tk, file, lia);
+        if (next) {
+          tk->last->next = next->next;
+        }
+      }
+
       key = iskey(this);
       next = keys[key](this, file, lia);
       if ( !next ) {
@@ -218,7 +227,7 @@ int lia_parser(lia_t *lia, imp_t *file)
     
     default:
       lia_error(file->filename, this->line, this->column,
-        "Unexpected token `%s'", this->text);
+        "Parser: Unexpected token `%s'", this->text);
       
       this = tknext(this, TK_SEPARATOR);
       if (this->next)

@@ -67,7 +67,7 @@ int chresc(int c)
  */
 token_type_t name2tktype(char *name)
 {
-  if ( !strcmp(name, ":SEPARATOR:") )
+  if ( !strcmp(name, ";") )
     return TK_SEPARATOR;
   if ( !strcmp(name, "[") )
     return TK_OPENBRACKET;
@@ -83,6 +83,30 @@ token_type_t name2tktype(char *name)
     return TK_COMMA;
   if ( !strcmp(name, "=") )
     return TK_EQUAL;
+  if ( !strcmp(name, "+") )
+    return TK_PLUS;
+  if ( !strcmp(name, "-") )
+    return TK_MINUS;
+  if ( !strcmp(name, "*") )
+    return TK_ASTERISK;
+  if ( !strcmp(name, "/") )
+    return TK_SLASH;
+  if ( !strcmp(name, "\\") )
+    return TK_BKSLASH;
+  if ( !strcmp(name, ">") )
+    return TK_GT;
+  if ( !strcmp(name, "<") )
+    return TK_LT;
+  if ( !strcmp(name, "$") )
+    return TK_DOLLAR;
+  if ( !strcmp(name, "&") )
+    return TK_AND;
+  if ( !strcmp(name, "|") )
+    return TK_PIPE;
+  if ( !strcmp(name, "!") )
+    return TK_EXCLAMATION;
+  if ( !strcmp(name, "?") )
+    return TK_QUESTION;
   if ( !strcmp(name, "id") )
     return TK_ID;
   if ( !strcmp(name, "imm") )
@@ -169,6 +193,66 @@ token_t *lia_lexer(char *filename, FILE *input)
     case '=':
       this->type = TK_EQUAL;
       strcpy(this->text, "=");
+      break;
+
+    case '+':
+      this->type = TK_PLUS;
+      strcpy(this->text, "+");
+      break;
+
+    case '-':
+      this->type = TK_MINUS;
+      strcpy(this->text, "-");
+      break;
+    
+    case '*':
+      this->type = TK_ASTERISK;
+      strcpy(this->text, "*");
+      break;
+    
+    case '/':
+      this->type = TK_SLASH;
+      strcpy(this->text, "/");
+      break;
+    
+    case '\\':
+      this->type = TK_BKSLASH;
+      strcpy(this->text, "\\");
+      break;
+    
+    case '>':
+      this->type = TK_GT;
+      strcpy(this->text, ">");
+      break;
+    
+    case '<':
+      this->type = TK_LT;
+      strcpy(this->text, "<");
+      break;
+    
+    case '$':
+      this->type = TK_DOLLAR;
+      strcpy(this->text, "$");
+      break;
+    
+    case '&':
+      this->type = TK_AND;
+      strcpy(this->text, "&");
+      break;
+    
+    case '|':
+      this->type = TK_PIPE;
+      strcpy(this->text, "|");
+      break;
+    
+    case '!':
+      this->type = TK_EXCLAMATION;
+      strcpy(this->text, "!");
+      break;
+    
+    case '?':
+      this->type = TK_QUESTION;
+      strcpy(this->text, "?");
       break;
 
     case ':':

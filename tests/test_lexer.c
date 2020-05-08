@@ -19,8 +19,17 @@ test_t test_lexer_code(void)
   };
   const int size = sizeof seqtype / sizeof *seqtype;
   const char types[][16] = {
-    "EOF", "ID", "SEPARATOR", "OPENBRACKET", "CLOSEBRACKET",
-    "COLON", "COMMA", "EQUAL", "IMMEDIATE", "CHAR", "STRING"
+    [TK_EOF] = "EOF",
+    [TK_ID] = "ID",
+    [TK_SEPARATOR] = "SEPARATOR",
+    [TK_OPENBRACKET] = "OPENBRACKET",
+    [TK_CLOSEBRACKET] = "CLOSEBRACKET",
+    [TK_COLON] = "COLON",
+    [TK_COMMA] = "COMMA",
+    [TK_EQUAL] = "EQUAL",
+    [TK_IMMEDIATE] = "IMMEDIATE",
+    [TK_CHAR] = "CHAR",
+    [TK_STRING] = "STRING"
   };
 
   FILE *input = fopen(TESTFILE, "r");

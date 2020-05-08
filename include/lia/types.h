@@ -34,9 +34,23 @@ typedef enum token_type {
   TK_SEPARATOR,
   TK_OPENBRACKET,
   TK_CLOSEBRACKET,
+  TK_OPENPARENS,
+  TK_CLOSEPARENS,
   TK_COLON,
   TK_COMMA,
   TK_EQUAL,
+  TK_PLUS,
+  TK_MINUS,
+  TK_ASTERISK,
+  TK_SLASH,
+  TK_BKSLASH,
+  TK_GT,
+  TK_LT,
+  TK_DOLLAR,
+  TK_AND,
+  TK_PIPE,
+  TK_EXCLAMATION,
+  TK_QUESTION,
   TK_IMMEDIATE,
   TK_CHAR,
   TK_STRING
@@ -137,13 +151,42 @@ typedef struct ctx {
   inst_type_t endtype;
 } ctx_t;
 
+
+/** Macro argument */
+typedef struct macro_arg {
+  EXTENDS_TREE(macro);
+
+  token_type_t type;
+  token_t *body;
+} macro_arg_t;
+
+/** A list of token types that a macro receive */
+typedef struct mtk {
+  struct mtk *next;
+  struct mtk *last;
+
+  token_type_t type;
+  char *name;
+} mtk_t;
+
+/** Macros' tree */
+typedef struct macro {
+  EXTENDS_TREE(macro);
+
+  macro_arg_t *argtree;
+  mtk_t *tkseq;
+  token_t *body;
+} macro_t;
+
+
 /** A Lia's struct reserving all informations about a code */
 typedef struct lia {
-  proc_t *proctree;  /**< The procedures' tree */
-  cmd_t *cmdtree;    /**< The commands' tree */
-  imp_t *imptree;    /**< The imports' tree */
-  inst_t *instlist;  /**< The instructions' list */
-  path_t *pathlist;  /**< The paths' list */
+  proc_t *proctree;    /**< The procedures' tree */
+  cmd_t *cmdtree;      /**< The commands' tree */
+  imp_t *imptree;      /**< The imports' tree */
+  macro_t *macrotree;  /**< Macros' tree */
+  inst_t *instlist;    /**< The instructions' list */
+  path_t *pathlist;    /**< The paths' list */
   
   ctx_t *ctx;        /**< Context for blocks instructions. */
   proc_t *inproc;    /**< Define context inside a procedure. */
@@ -156,7 +199,8 @@ typedef struct lia {
 typedef enum metakeyword {
   META_NONE,
   META_NEW,
-  META_IMPORT
+  META_IMPORT,
+  META_MACRO
 } metakeyword_t;
 
 /** Keywords */

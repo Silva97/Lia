@@ -184,6 +184,20 @@ int lia_parser(lia_t *lia, imp_t *file)
       break;
     
     case TK_ID:
+      next = macro_expand(this, file, lia);
+      if (next) {
+        this = next;
+        break;
+      }
+
+      if ( this->next->type == TK_OPENPARENS ) {
+        lia_error(file->filename, this->line, this->column,
+          "Macro '%s' not defined with this token sequence.", this->text);
+        this = tknext(this, TK_CLOSEPARENS);
+        errcount++;
+        break;
+      }
+
       key = iskey(this);
       next = keys[key](this, file, lia);
       if ( !next ) {
@@ -215,9 +229,6 @@ int lia_parser(lia_t *lia, imp_t *file)
 
       errcount++;
     }
-
-    if ( !this->next )
-      break;
 
     this = this->next;
   }

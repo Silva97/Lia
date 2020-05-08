@@ -1,0 +1,18 @@
+[import "modules/lia"]
+
+[macro test(abc: str ',' def: imm) =
+  say abc
+  set ra, def
+]
+
+[new break = ".61"]
+[macro name = break]
+
+test("Luiz", 10)
+test("wrong" 99)
+
+name()
+name
+name(1)
+
+func 8

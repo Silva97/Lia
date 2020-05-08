@@ -18,4 +18,5 @@ script:
   - make test name=compiler
   - make test name=cmd
   - make test name=procedure
+  - make test name=macros
   - bash test_modules.sh

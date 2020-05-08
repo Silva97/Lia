@@ -11,8 +11,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
-#include "lia/parser.h"
-#include "lia/error.h"
+#include "lia/lia.h"
 
 /**
  * @brief Finds the next token of the type
@@ -191,8 +190,6 @@ int lia_parser(lia_t *lia, imp_t *file)
       }
 
       if ( this->next->type == TK_OPENPARENS ) {
-        lia_error(file->filename, this->line, this->column,
-          "Macro '%s' not defined with this token sequence.", this->text);
         this = tknext(this, TK_CLOSEPARENS);
         errcount++;
         break;

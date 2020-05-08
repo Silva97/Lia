@@ -18,7 +18,6 @@ token_t *meta_macro(KEY_ARGS)
   macro_t *macro;
   token_t *first;
   mtk_t *macro_tkseq = NULL;
-  const int namesize = TKMAX + 64;
 
   tk = metanext(tk);
   first = tk;
@@ -29,9 +28,14 @@ token_t *meta_macro(KEY_ARGS)
     return NULL;
   }
 
-  char *lastchar;
-  char *macro_name = malloc(namesize + 1);
-  strcpy(macro_name, tk->text);
+  if ( tree_find(lia->macrotree, hash(tk->text)) ) {
+    lia_error(file->filename, tk->line, tk->column,
+      "Redeclaration of the macro '%s'", tk->text);
+    return NULL;
+  }
+
+  macro = tree_insert(lia->macrotree, sizeof *macro, hash(tk->text));
+  macro->name = tk->text;
 
   tk = metanext(tk);
   if (tk->type == TK_OPENPARENS) {
@@ -66,10 +70,6 @@ token_t *meta_macro(KEY_ARGS)
             return NULL;
           }
 
-
-          lastchar = strchr(macro_name, '\0');
-          sprintf(lastchar, "_%d", type);
-
           if ( !macro_tkseq )
             macro_tkseq = macro_tkseq_add(NULL, type, tk->last->last->text);
           else
@@ -87,9 +87,6 @@ token_t *meta_macro(KEY_ARGS)
               "%s", "You can't use ')' inside a macro.");
             return NULL;
           }
-
-          lastchar = strchr(macro_name, '\0');
-          sprintf(lastchar, "_%d", type);
 
           if ( !macro_tkseq )
             macro_tkseq = macro_tkseq_add(NULL, type, NULL);
@@ -114,8 +111,12 @@ token_t *meta_macro(KEY_ARGS)
   }
 
   tk = metanext(tk);
-  macro = tree_insert(lia->macrotree, sizeof *macro, hash(macro_name));
-  macro->name = macro_name;
+  if (tk->type == TK_CLOSEBRACKET) {
+    lia_error(file->filename, tk->line, tk->column,
+      "%s", "Expected a minimum of one token for the macro's body.");
+    return NULL;
+  }
+
   macro->tkseq = macro_tkseq;
   macro->body = tk;
 

@@ -76,43 +76,38 @@ mtk_t *macro_tkseq_add(mtk_t *list, token_type_t type, char *name)
 
 token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
 {
-  char macro_name[256];
-  char *lastchar;
   macro_t *macro;
   macro_arg_t *arg;
   token_t *first = tk;
 
-  if (tk->next->type != TK_OPENPARENS) {
-    macro = tree_find(lia->macrotree, hash(tk->text));
-    if ( !macro )
-      return NULL;
-  } else if (tk->next->next->type == TK_OPENPARENS) {
-    macro = tree_find(lia->macrotree, hash(tk->text));
-    if ( !macro )
-      return NULL;
-    
-    tk = tk->next->next;
-  } else {
-    strcpy(macro_name, tk->text);
-    tk = tk->next->next;
+  macro = tree_find(lia->macrotree, hash(tk->text));
+  if ( !macro || !macro->body )
+    return NULL;
+  
 
-    for (; tk->type != TK_CLOSEPARENS; tk = tk->next) {
-      lastchar = strchr(macro_name, '\0');
-      sprintf(lastchar, "_%d", tk->type);
+  if ( !macro->tkseq ) {
+    if (tk->next->type == TK_OPENPARENS) {
+      if (tkseq(tk->next, 2, TK_OPENPARENS, TK_CLOSEPARENS) >= 0) {
+        lia_error(file->filename, tk->line, tk->column,
+          "Macro '%s' don't expects a sequence of tokens.", tk->text);
+        return NULL;
+      }
+      tk = tk->next->next;
+    }
+  } else {
+    if (tk->next->type != TK_OPENPARENS) {
+      lia_error(file->filename, tk->next->line, tk->next->column,
+        "%s", "Expected a list of tokens inside parens.");
+      return NULL;
     }
 
-    macro = tree_find(lia->macrotree, hash(macro_name));
-    if ( !macro )
-      return NULL;
-    
-    tk = first->next->next;
-    
     macro->argtree = calloc(1, sizeof (macro_arg_t));
 
+    tk = tk->next->next;
     for (mtk_t *this = macro->tkseq; this; this = this->next) {
       if (this->type != tk->type) {
         lia_error(file->filename, tk->line, tk->column,
-          "Expected %s token, instead have: `%s'", tktype2name(this->type),
+          "Expected `%s' token, instead have: `%s'", tktype2name(this->type),
           tk->text);
         return NULL;
       }

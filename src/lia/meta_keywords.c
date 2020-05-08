@@ -77,7 +77,7 @@ mtk_t *macro_tkseq_add(mtk_t *list, token_type_t type, char *name)
 token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
 {
   macro_t *macro;
-  macro_arg_t *arg;
+  macro_arg_t *arg = NULL;
   token_t *first = tk;
 
   macro = tree_find(lia->macrotree, hash(tk->text));
@@ -129,10 +129,18 @@ token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
   token_t *body = malloc(sizeof *body);
   first->last->next = body;
 
-  memcpy(body, macro->body, sizeof *body);
+  if (this->type == TK_ID)
+    arg = tree_find(macro->argtree, hash(this->text));
+  
+  if (arg) {
+    memcpy(body, arg->body, sizeof *body);
+  } else {
+    memcpy(body, macro->body, sizeof *body);
+    body->line = first->line;
+    body->column = first->column;
+  }
+
   body->last = first->last;
-  body->line = first->line;
-  body->column = first->column;
 
   for (this = this->next; this; this = this->next) {
     new = malloc(sizeof *new);

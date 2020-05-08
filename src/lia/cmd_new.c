@@ -17,20 +17,21 @@
 /**
  * @brief Inserts a new instruction in the tree.
  * 
+ * If the command exists, overwrite it.
+ * 
  * @param tree     The tree root of commands
  * @param name     Name of the new command
  * @param args     Array of arguments
  * @param body     Body of the command
- * @return cmd_t*  Pointer to the new element if all ok
- * @return NULL    If the element already exists
+ * @return cmd_t*  Pointer to the new element
  */
 cmd_t *lia_cmd_new(cmd_t *tree, char *name, cmd_arg_t *args, char *body)
 {
   unsigned long int hashname = hash(name);
-  cmd_t *new = tree_insert(tree, sizeof *new, hashname);
+  cmd_t *new = tree_find(tree, hashname);
 
   if ( !new )
-    return NULL;
+    new = tree_insert(tree, sizeof *new, hashname);
 
   new->name = name;
   memcpy(new->args, args, sizeof *args * CMD_ARGC);

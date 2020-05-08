@@ -79,6 +79,7 @@ token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
   macro_t *macro;
   macro_arg_t *arg = NULL;
   token_t *first = tk;
+  token_t *next;
 
   macro = tree_find(lia->macrotree, hash(tk->text));
   if ( !macro || !macro->body )
@@ -105,6 +106,13 @@ token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
 
     tk = tk->next->next;
     for (mtk_t *this = macro->tkseq; this; this = this->next) {
+      if (tk->type == TK_ID) {
+        next = macro_expand(tk, file, lia);
+        if (next) {
+          tk = next->next;
+        }
+      }
+
       if (this->type != tk->type) {
         lia_error(file->filename, tk->line, tk->column,
           "Expected `%s' token, instead have: `%s'", tktype2name(this->type),

@@ -119,6 +119,39 @@ token_type_t name2tktype(char *name)
   return -1;
 }
 
+const char *tktype2name(token_type_t type)
+{
+  const char *list[] = {
+    [TK_EOF] = ":EOF:",
+    [TK_ID] = "identification",
+    [TK_IMMEDIATE] = "literal number",
+    [TK_CHAR] = "literal character",
+    [TK_STRING] = "string",
+    [TK_SEPARATOR] = ";",
+    [TK_OPENBRACKET] = "[",
+    [TK_CLOSEBRACKET] = "]",
+    [TK_OPENPARENS] = "(",
+    [TK_CLOSEPARENS] = ")",
+    [TK_COLON] = ":",
+    [TK_COMMA] = ",",
+    [TK_EQUAL] = "=",
+    [TK_PLUS] = "+",
+    [TK_MINUS] = "-",
+    [TK_ASTERISK] = "*",
+    [TK_SLASH] = "/",
+    [TK_BKSLASH] = "\\",
+    [TK_GT] = ">",
+    [TK_LT] = "<",
+    [TK_DOLLAR] = "$",
+    [TK_AND] = "&",
+    [TK_PIPE] = "|",
+    [TK_EXCLAMATION] = "!",
+    [TK_QUESTION] = "?"
+  };
+
+  return list[type];
+}
+
 /**
  * @brief Do lexical analyze of a Lia code.
  * 

@@ -16,6 +16,7 @@
 
 int chresc(int c);
 token_type_t name2tktype(char *name);
+const char *tktype2name(token_type_t type);
 
 token_t *lia_lexer(char *filename, FILE *input);
 

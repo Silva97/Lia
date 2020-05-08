@@ -354,6 +354,9 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
   case INST_SAY:
     str_compile(inst->file->filename, output, inst->child->next);
     break;
+  case INST_ASES:
+    fputs(inst->child->next->text, output);
+    break;
   default:
     lia_error(inst->file->filename, inst->child->line, inst->child->column,
       "Sorry but my programmers not implemented `%s' yet!",

@@ -48,6 +48,8 @@ keyword_t iskey(token_t *tk)
     return KEY_ENDIF;
   if ( !strcmp(tk->text, "say") )
     return KEY_SAY;
+  if ( !strcmp(tk->text, "ases") )
+    return KEY_ASES;
   
   return KEY_NONE;
 }
@@ -194,6 +196,25 @@ static token_t *key_opnone(KEY_ARGS,  inst_type_t type)
   return next;
 }
 
+static token_t *key_op1str(KEY_ARGS, inst_type_t type)
+{
+  tk = tk->next;
+
+  if (tk->type != TK_STRING) {
+    lia_error(file->filename, tk->line, tk->column,
+      "Expected a string, instead have `%s'", tk->text);
+    return NULL;
+  }
+  
+  token_t *next = tk->next;
+  inst_t *inst = inst_add(lia->instlist, type);
+  inst->child = tk->last;
+  inst->file = file;
+  tk->next = NULL;
+
+  return next;
+}
+
 token_t *key_func(KEY_ARGS)
 {
   tk = tk->next;
@@ -312,19 +333,10 @@ token_t *key_endif(KEY_ARGS)
 
 token_t *key_say(KEY_ARGS)
 {
-  tk = tk->next;
+  return key_op1str(tk, file, lia, INST_SAY);
+}
 
-  if (tk->type != TK_STRING) {
-    lia_error(file->filename, tk->line, tk->column,
-      "Expected a string, instead have `%s'", tk->text);
-    return NULL;
-  }
-  
-  token_t *next = tk->next;
-  inst_t *inst = inst_add(lia->instlist, INST_SAY);
-  inst->child = tk->last;
-  inst->file = file;
-  tk->next = NULL;
-
-  return next;
+token_t *key_ases(KEY_ARGS)
+{
+  return key_op1str(tk, file, lia, INST_ASES);
 }

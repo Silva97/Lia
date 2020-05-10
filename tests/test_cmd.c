@@ -10,7 +10,7 @@ static void cmd_print(cmd_t *cmd)
   for (int i = 0; i < CMD_ARGC; i++)
     printf("%c:%c ", cmd->args[i].name, cmd->args[i].type);
   
-  printf("= \"%s\"\n", cmd->body);
+  printf("= \"%s\"\n", cmd->body->text);
 }
 
 static void tree_print(cmd_t *tree, unsigned int level)
@@ -42,15 +42,19 @@ static void tree_print(cmd_t *tree, unsigned int level)
 test_t test_cmdtree(void)
 {
   cmd_t *tree = calloc(1, sizeof *tree);
+  token_t body = {
+    .text = "XxxX",
+    .type = TK_STRING
+  };
 
-  lia_cmd_new(tree, "add",  (CMDT){ {'X', 'r'}, {'Y', 'r'}, {0, 0} }, "XaY4");
-  lia_cmd_new(tree, "iadd", (CMDT){ {'X', 'r'}, {'Y', 'i'}, {0, 0} }, "XaY4");
-  lia_cmd_new(tree, "sub",  (CMDT){ {'X', 'r'}, {'Y', 'r'}, {0, 0} }, "XaY5");
-  lia_cmd_new(tree, "isub", (CMDT){ {'X', 'r'}, {'Y', 'i'}, {0, 0} }, "XaY5");
+  lia_cmd_new(tree, "add",  (CMDT){ {'X', 'r'}, {'Y', 'r'}, {0, 0} }, &body);
+  lia_cmd_new(tree, "iadd", (CMDT){ {'X', 'r'}, {'Y', 'i'}, {0, 0} }, &body);
+  lia_cmd_new(tree, "sub",  (CMDT){ {'X', 'r'}, {'Y', 'r'}, {0, 0} }, &body);
+  lia_cmd_new(tree, "isub", (CMDT){ {'X', 'r'}, {'Y', 'i'}, {0, 0} }, &body);
 
-  lia_cmd_new(tree, "xxx", (CMDT){ {'X', 'r'}, {'Y', 'i'}, {0, 0} }, "XXXX");
-  lia_cmd_new(tree, "yyy", (CMDT){ {'X', 'r'}, {'Y', 'i'}, {0, 0} }, "YYYY");
-  lia_cmd_new(tree, "zzz", (CMDT){ {'X', 'r'}, {'Y', 'i'}, {0, 0} }, "ZZZZ");
+  lia_cmd_new(tree, "xxx", (CMDT){ {'X', 'r'}, {'Y', 'i'}, {0, 0} }, &body);
+  lia_cmd_new(tree, "yyy", (CMDT){ {'X', 'r'}, {'Y', 'i'}, {0, 0} }, &body);
+  lia_cmd_new(tree, "zzz", (CMDT){ {'X', 'r'}, {'Y', 'i'}, {0, 0} }, &body);
 
   tree_print(tree, 0);
 
@@ -84,10 +88,14 @@ test_t test_cmdcompile(void)
   int ret;
   cmd_t *tree = calloc(1, sizeof *tree);
   proc_t *proctree = calloc(1, sizeof *proctree);
+  token_t body = {
+    .text = "xXYy",
+    .type = TK_STRING
+  };
 
-  lia_cmd_new(tree, "add",   (CMDT){ {'X', 'r'}, {'Y', 'r'}, CMDNULL }, "XaYb4");
-  lia_cmd_new(tree, "set",   (CMDT){ {'X', 'r'}, {'Y', 'i'}, CMDNULL }, "Yx");
-  lia_cmd_new(tree, "call2", (CMDT){ {'X', 'p'}, CMDNULL, CMDNULL },    "XX");
+  lia_cmd_new(tree, "add",   (CMDT){ {'X', 'r'}, {'Y', 'r'}, CMDNULL }, &body);
+  lia_cmd_new(tree, "set",   (CMDT){ {'X', 'r'}, {'Y', 'i'}, CMDNULL }, &body);
+  lia_cmd_new(tree, "call2", (CMDT){ {'X', 'p'}, CMDNULL, CMDNULL },    &body);
 
   ret = lia_cmd_compile(proctree, "test", stdout, tree_find(tree, hash("add")),
     (OPT){ OPREG("rb"), OPREG("ra"), OPNULL });

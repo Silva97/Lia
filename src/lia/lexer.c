@@ -183,7 +183,7 @@ token_t *lia_lexer(char *filename, FILE *input)
     if (ch == '#') {
       do {
         ch = getc(input);
-      } while (ch != '\n');
+      } while (ch != '\n' && ch != EOF);
     }
 
     this->line = line;

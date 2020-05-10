@@ -56,6 +56,7 @@ keyword_t iskey(token_t *tk)
 
 token_t *cmd_verify(KEY_ARGS)
 {
+  int i;
   token_t *first = tk;
   cmd_t *cmd = tree_find(lia->cmdtree, hash(tk->text));
 
@@ -65,7 +66,7 @@ token_t *cmd_verify(KEY_ARGS)
     return NULL;
   }
 
-  for (int i = 0; i < cmd->argc; i++) {
+  for (i = 0; i < cmd->argc; i++) {
     tk = tk->next;
 
     switch (cmd->args[i].type) {
@@ -105,15 +106,14 @@ token_t *cmd_verify(KEY_ARGS)
       break;
     }
 
-    if (tk->next->type != TK_COMMA)
-      break;
-    
-    tk = tk->next;
+    if (tk->next->type == TK_COMMA)
+      tk = tk->next;
   }
 
   token_t *next = tk->next;
 
-  if (next->type != TK_SEPARATOR && next->type != TK_EOF) {
+  if (i != cmd->argc ||
+      (next->type != TK_SEPARATOR && next->type != TK_EOF) ) {
     lia_error(file->filename, next->line, next->column,
       "Command '%s' expects %d operands.", first->text, cmd->argc);
     return NULL;

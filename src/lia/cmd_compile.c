@@ -134,7 +134,7 @@ token_t *str_compile(char *filename, FILE *output, token_t *tk)
     if ( !tk->next )
       break;
 
-    tk = tk->next;
+    tk = metanext(tk);
   }
 
   return tk;
@@ -176,6 +176,7 @@ int isreg(token_t *tk)
  */
 int lia_cmd_compile(proc_t *proctree, char *filename, FILE *output, cmd_t *cmd, operand_t *ops)
 {
+  token_t *tk;
   int index;
   char *position;
 
@@ -189,30 +190,32 @@ int lia_cmd_compile(proc_t *proctree, char *filename, FILE *output, cmd_t *cmd, 
     0
   };
 
-  for (int i = 0; cmd->body[i]; i++) {
-    position = strchr( arglist, tolower(cmd->body[i]) );
+  for (tk = cmd->body; tk && tk->type == TK_STRING; tk = metanext(tk)) {
+    for (int i = 0; tk->text[i]; i++) {
+      position = strchr( arglist, tolower(tk->text[i]) );
 
-    if (position) {
-      index = (int) (position - arglist);
+      if (position) {
+        index = (int) (position - arglist);
 
-      switch (cmd->args[index].type) {
-      case 'r':
-        reg_compile( output, ops[index].reg, isupper(cmd->body[i]) );
-        break;
-      case 'i':
-        imm_compile(output, ops[index].imm);
-        break;
-      case 'p':
-        proc_call( output, proc_add(proctree, ops[index].procedure) );
-        break;
-      case 's':
-        str_compile(filename, output, ops[index].string);
-        break;
-      default:
-        return 0;
+        switch (cmd->args[index].type) {
+        case 'r':
+          reg_compile( output, ops[index].reg, isupper(tk->text[i]) );
+          break;
+        case 'i':
+          imm_compile(output, ops[index].imm);
+          break;
+        case 'p':
+          proc_call( output, proc_add(proctree, ops[index].procedure) );
+          break;
+        case 's':
+          str_compile(filename, output, ops[index].string);
+          break;
+        default:
+          return 0;
+        }
+      } else {
+        putc(tk->text[i], output);
       }
-    } else {
-      putc(cmd->body[i], output);
     }
   }
 

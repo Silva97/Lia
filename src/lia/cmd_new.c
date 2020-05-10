@@ -25,7 +25,7 @@
  * @param body     Body of the command
  * @return cmd_t*  Pointer to the new element
  */
-cmd_t *lia_cmd_new(cmd_t *tree, char *name, cmd_arg_t *args, char *body)
+cmd_t *lia_cmd_new(cmd_t *tree, char *name, cmd_arg_t *args, token_t *body)
 {
   unsigned long int hashname = hash(name);
   cmd_t *new = tree_find(tree, hashname);

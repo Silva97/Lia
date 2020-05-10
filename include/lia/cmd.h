@@ -28,7 +28,7 @@ void imm_compile(FILE *output, uint8_t imm);
 token_t *str_compile(char *filename, FILE *output, token_t *tk);
 int isreg(token_t *tk);
 
-cmd_t *lia_cmd_new(cmd_t *tree, char *name, cmd_arg_t *args, char *body);
+cmd_t *lia_cmd_new(cmd_t *tree, char *name, cmd_arg_t *args, token_t *body);
 int lia_cmd_compile(proc_t *proctree, char *filename, FILE *output, cmd_t *cmd, operand_t *ops);
 
 #endif /* _LIA_CMD_H */

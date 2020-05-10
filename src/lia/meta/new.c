@@ -84,6 +84,6 @@ token_t *meta_new(KEY_ARGS)
     return NULL;
   }
 
-  lia_cmd_new(lia->cmdtree, name, args, tk->text);
-  return metanext(tk);
+  lia_cmd_new(lia->cmdtree, name, args, tk);
+  return metanext( lasttype(tk, TK_STRING) );
 }

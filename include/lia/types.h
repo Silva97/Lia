@@ -83,7 +83,7 @@ typedef struct cmd {
 
   cmd_arg_t args[CMD_ARGC];
   unsigned int argc;
-  char *body;
+  token_t *body;
 } cmd_t;
 
 /** Operand's union */

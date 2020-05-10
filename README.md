@@ -27,7 +27,7 @@ iequ rc, 'r'
 ifnz say "It's not the 'r' character!\n"
 ```
 
-## Instalation
+## Installation
 To install Lia in your system, just run:
 
 ```
@@ -41,3 +41,5 @@ For see help about usage, run `lia -h`.
 ```
 $ echo 'say "Hello World!\n"' | lia -o- - | ases
 ```
+
+If you want to learn how to program in Lia, see the [Wiki here](https://github.com/Silva97/Lia/wiki).

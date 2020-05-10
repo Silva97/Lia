@@ -360,7 +360,8 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
       lia->errcount++;
     break;
   case INST_ASES:
-    fputs(inst->child->next->text, output);
+    for (token_t *tk = inst->child->next; tk && tk->type == TK_STRING; tk = metanext(tk))
+      fputs(tk->text, output);
     break;
   default:
     lia_error(inst->file->filename, inst->child->line, inst->child->column,

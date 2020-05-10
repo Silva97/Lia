@@ -14,7 +14,7 @@ static void cmd_print(cmd_t *cmd)
   for (int i = 0; i < CMD_ARGC; i++)
     printf("%c:%c ", cmd->args[i].name, cmd->args[i].type);
   
-  printf("= \"%s\"\n", cmd->body);
+  printf("= \"%s\"\n", cmd->body->text);
 }
 
 static void tree_print(cmd_t *tree, unsigned int level)

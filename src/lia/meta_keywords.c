@@ -42,9 +42,32 @@ metakeyword_t ismetakey(token_t *tk)
 token_t *metanext(token_t *tk)
 {
   tk = tk->next;
-  while (tk->type == TK_SEPARATOR)
+  while (tk && tk->type == TK_SEPARATOR)
     tk = tk->next;
 
+  return tk;
+}
+
+/**
+ * @brief Returns last token in a sequence of type.
+ * 
+ * @param tk         Initial token
+ * @param type       The type to find
+ * @return token_t*  Last token of the type
+ */
+token_t *lasttype(token_t *tk, token_type_t type)
+{
+  token_t *next;
+  if (tk->type != type)
+    return tk;
+
+  while (tk) {
+    next = metanext(tk);
+    if ( !next || next->type != type)
+      break;
+    tk = next;
+  }
+  
   return tk;
 }
 

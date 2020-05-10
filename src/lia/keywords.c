@@ -101,8 +101,7 @@ token_t *cmd_verify(KEY_ARGS)
         return NULL;
       }
 
-      while (tk->next->type == TK_STRING)
-        tk = tk->next;
+      tk = lasttype(tk, TK_STRING);
       break;
     }
 
@@ -213,8 +212,7 @@ static token_t *key_op1str(KEY_ARGS, inst_type_t type)
   inst->child = tk->last;
   inst->file = file;
 
-  while (tk->next->type == TK_STRING)
-    tk = tk->next;
+  tk = lasttype(tk, TK_STRING);
 
   token_t *next = tk->next;
   tk->next = NULL;

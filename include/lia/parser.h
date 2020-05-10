@@ -14,6 +14,7 @@
 
 metakeyword_t ismetakey(token_t *tk);
 token_t *metanext(token_t *tk);
+token_t *lasttype(token_t *tk, token_type_t type);
 mtk_t *macro_tkseq_add(mtk_t *list, token_type_t type, char *name);
 token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia);
 token_t *meta_new(KEY_ARGS);

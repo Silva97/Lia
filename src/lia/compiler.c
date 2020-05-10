@@ -213,8 +213,7 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
       break;
     case TK_STRING:
       operands[i].string = tk;
-      while (tk->next && tk->next->type == TK_STRING)
-        tk = tk->next;
+      tk = lasttype(tk, TK_STRING);
       break;
     default:
       lia_error(inst->file->filename, tk->line, tk->column,

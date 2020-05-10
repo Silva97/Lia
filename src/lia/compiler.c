@@ -355,7 +355,8 @@ inst_t *lia_inst_compile(FILE *output, inst_t *inst, lia_t *lia, int pretty)
     putc('@', output);
     break;
   case INST_SAY:
-    str_compile(inst->file->filename, output, inst->child->next);
+    if ( !str_compile(inst->file->filename, output, inst->child->next) )
+      lia->errcount++;
     break;
   case INST_ASES:
     fputs(inst->child->next->text, output);

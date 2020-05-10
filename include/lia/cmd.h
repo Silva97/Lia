@@ -25,7 +25,7 @@
 
 int reg_compile(FILE *output, char *reg, int get);
 void imm_compile(FILE *output, uint8_t imm);
-int str_compile(char *filename, FILE *output, token_t *tk);
+token_t *str_compile(char *filename, FILE *output, token_t *tk);
 int isreg(token_t *tk);
 
 cmd_t *lia_cmd_new(cmd_t *tree, char *name, cmd_arg_t *args, char *body);

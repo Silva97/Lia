@@ -99,6 +99,9 @@ token_t *cmd_verify(KEY_ARGS)
           first->text, i+1);
         return NULL;
       }
+
+      while (tk->next->type == TK_STRING)
+        tk = tk->next;
       break;
     }
 
@@ -206,10 +209,14 @@ static token_t *key_op1str(KEY_ARGS, inst_type_t type)
     return NULL;
   }
   
-  token_t *next = tk->next;
   inst_t *inst = inst_add(lia->instlist, type);
   inst->child = tk->last;
   inst->file = file;
+
+  while (tk->next->type == TK_STRING)
+    tk = tk->next;
+
+  token_t *next = tk->next;
   tk->next = NULL;
 
   return next;

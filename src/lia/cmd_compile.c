@@ -77,11 +77,12 @@ void imm_compile(FILE *output, uint8_t imm)
  * @brief Compiles a string at a sequence of output
  * 
  * @param filename  The filename.
- * @param output    The file to writes the output
+ * @param output    The file to writes the output.
  * @param tk        The token to reads the text.
- * @return int      Return zero if all ok
+ * @return token_t* Last string token compiled.
+ * @return NULL     If error.
  */
-int str_compile(char *filename, FILE *output, token_t *tk)
+token_t *str_compile(char *filename, FILE *output, token_t *tk)
 {
   int index;
   int diff;
@@ -90,46 +91,53 @@ int str_compile(char *filename, FILE *output, token_t *tk)
   int last = 0;
   putc('.', output);
 
-  for (int ch, i = 0; tk->text[i]; i++) {
-    if (tk->text[i] == '\\') {
-      i++;
-      ch = chresc(tk->text[i]);
-      if (ch < 0) {
-        lia_error(filename, tk->line, tk->column + i + 1,
-          "Invalid escape '\\%c' at string.", tk->text[i]);
+  while (tk->type == TK_STRING) {
+    for (int ch, i = 0; tk->text[i]; i++) {
+      if (tk->text[i] == '\\') {
+        i++;
+        ch = chresc(tk->text[i]);
+        if (ch < 0) {
+          lia_error(filename, tk->line, tk->column + i + 1,
+            "Invalid escape '\\%c' at string.", tk->text[i]);
 
-        return 1;
+          return NULL;
+        }
+      } else {
+        ch = tk->text[i];
       }
-    } else {
-      ch = tk->text[i];
-    }
 
-    diff = abs(last - ch);
-    if ( !diff ) {
-      putc('1', output);
-      continue;
-    }
+      diff = abs(last - ch);
+      if ( !diff ) {
+        putc('1', output);
+        continue;
+      }
 
-    index = (last > ch);
-    for (int i = 0; i < diff/10; i++)
-      putc(chten[index], output);
+      index = (last > ch);
+      for (int i = 0; i < diff/10; i++)
+        putc(chten[index], output);
+      
+      unsigned int total = diff%10;
+      if (total > 5) {
+        putc(chten[index], output);
+
+        for (int i = 10 - total; i > 0; i--)
+          putc(chone[ !index ], output);
+      } else {
+        for (int i = total; i > 0; i--)
+          putc(chone[index], output);
+      }
     
-    unsigned int total = diff%10;
-    if (total > 5) {
-      putc(chten[index], output);
-
-      for (int i = 10 - total; i > 0; i--)
-        putc(chone[ !index ], output);
-    } else {
-      for (int i = total; i > 0; i--)
-        putc(chone[index], output);
+      putc('1', output);
+      last = ch;
     }
-  
-    putc('1', output);
-    last = ch;
+
+    if ( !tk->next )
+      break;
+
+    tk = tk->next;
   }
 
-  return 0;
+  return tk;
 }
 
 /**

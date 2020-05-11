@@ -41,6 +41,12 @@ void macro_seq_print(void *tree_node)
     case TK_IMMEDIATE:
       fputs("number", stderr);
       break;
+    case TK_REGISTER:
+      fputs("reg", stderr);
+      break;
+    case TK_ID:
+      fputs("id", stderr);
+      break;
     default:
       fprintf(stderr, "'%s'", tktype2name(tkseq->type));
     }
@@ -209,8 +215,12 @@ token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
   if (tk->next->type == TK_OPENPARENS) {
     tk = tk->next->next;
     firstseq = tk;
-    for (; tk->type != TK_CLOSEPARENS; tk = tk->next)
-      hashint(&tkseq_hash, tk->type);
+    for (; tk->type != TK_CLOSEPARENS; tk = tk->next) {
+      if ( isreg(tk) )
+        hashint(&tkseq_hash, TK_REGISTER);
+      else
+        hashint(&tkseq_hash, tk->type);
+    }
   }
 
   variant = tree_find(macro->variants, tkseq_hash);

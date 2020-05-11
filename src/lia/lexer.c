@@ -129,6 +129,7 @@ const char *tktype2name(token_type_t type)
     [TK_IMMEDIATE] = "literal number",
     [TK_CHAR] = "literal character",
     [TK_STRING] = "string",
+    [TK_REGISTER] = "register",
     [TK_SEPARATOR] = ";",
     [TK_OPENBRACKET] = "[",
     [TK_CLOSEBRACKET] = "]",

@@ -54,7 +54,6 @@ typedef enum token_type {
   TK_IMMEDIATE,
   TK_CHAR,
   TK_STRING,
-  TK_ANY,
   TK_REGISTER
 } token_type_t;
 
@@ -172,13 +171,19 @@ typedef struct mtk {
   char *name;
 } mtk_t;
 
+/** Variant of a macro */
+typedef struct macro_var {
+  EXTENDS_TREE(macro_var);
+
+  mtk_t *tkseq;
+  token_t *body;
+} macro_var_t;
+
 /** Macros' tree */
 typedef struct macro {
   EXTENDS_TREE(macro);
 
-  macro_arg_t *argtree;
-  mtk_t *tkseq;
-  token_t *body;
+  macro_var_t *variants;
 } macro_t;
 
 

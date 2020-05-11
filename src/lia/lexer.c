@@ -115,8 +115,6 @@ token_type_t name2tktype(char *name)
     return TK_CHAR;
   if ( !strcmp(name, "str") )
     return TK_STRING;
-  if ( !strcmp(name, "imm") )
-    return TK_ANY;
   if ( !strcmp(name, "reg") )
     return TK_REGISTER;
   

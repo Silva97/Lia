@@ -11,6 +11,44 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lia/lia.h"
+#include "tree.h"
+
+/**
+ * @brief Prints the sequence of tokens of a variant.
+ * 
+ * This function can be used with tree_map().
+ * 
+ * @param variant  The variant of a macro.
+ */
+void macro_seq_print(void *tree_node)
+{
+  macro_var_t *variant = tree_node;
+  mtk_t *tkseq = variant->tkseq;
+
+  putc('(', stderr);
+  for (; tkseq; tkseq = tkseq->next) {
+    putc(' ', stderr);
+    if (tkseq->name)
+      fprintf(stderr, "%s: ", tkseq->name);
+    
+    switch (tkseq->type) {
+    case TK_STRING:
+      fputs("str", stderr);
+      break;
+    case TK_CHAR:
+      fputs("char", stderr);
+      break;
+    case TK_IMMEDIATE:
+      fputs("number", stderr);
+      break;
+    default:
+      fprintf(stderr, "'%s'", tktype2name(tkseq->type));
+    }
+  }
+
+  fputs(" )\n", stderr);
+}
+
 
 token_t *meta_macro(KEY_ARGS)
 {
@@ -18,6 +56,7 @@ token_t *meta_macro(KEY_ARGS)
   macro_t *macro;
   token_t *first;
   mtk_t *macro_tkseq = NULL;
+  unsigned long int tkseq_hash = INITIAL_HASH;
 
   tk = metanext(tk);
   first = tk;
@@ -28,14 +67,12 @@ token_t *meta_macro(KEY_ARGS)
     return NULL;
   }
 
-  if ( tree_find(lia->macrotree, hash(tk->text)) ) {
-    lia_error(file->filename, tk->line, tk->column,
-      "Redeclaration of the macro '%s'", tk->text);
-    return NULL;
+  macro = tree_find(lia->macrotree, hash(tk->text));
+  if ( !macro ) {
+    macro = tree_insert(lia->macrotree, sizeof *macro, hash(tk->text));
+    macro->name = tk->text;
+    macro->variants = calloc(1, sizeof (macro_var_t));
   }
-
-  macro = tree_insert(lia->macrotree, sizeof *macro, hash(tk->text));
-  macro->name = tk->text;
 
   tk = metanext(tk);
   if (tk->type == TK_OPENPARENS) {
@@ -98,6 +135,8 @@ token_t *meta_macro(KEY_ARGS)
             tk->text);
           return NULL;
         }
+
+        hashint(&tkseq_hash, type);
       }
     }
     
@@ -117,8 +156,16 @@ token_t *meta_macro(KEY_ARGS)
     return NULL;
   }
 
-  macro->tkseq = macro_tkseq;
-  macro->body = tk;
+  if ( tree_find(macro->variants, tkseq_hash) ) {
+    lia_error(file->filename, first->line, first->column,
+      "Redeclaration of macro '%s' with the same sequence of tokens.", macro->name);
+    return NULL;
+  }
+
+  macro_var_t *variant = tree_insert(macro->variants, sizeof *variant, tkseq_hash);
+
+  variant->tkseq = macro_tkseq;
+  variant->body = tk;
 
   for (int ctx = 1; tk && ctx; tk = tk->next) {
     if (tk->type == TK_OPENBRACKET)
@@ -148,90 +195,87 @@ token_t *meta_macro(KEY_ARGS)
 token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
 {
   macro_t *macro;
+  macro_var_t *variant;
+  macro_arg_t *argtree;
   macro_arg_t *arg = NULL;
+  unsigned long int tkseq_hash = INITIAL_HASH;
   token_t *first = tk;
   token_t *next;
+  token_t *firstseq = NULL;
 
   macro = tree_find(lia->macrotree, hash(tk->text));
-  if ( !macro || !macro->body )
+  if ( !macro )
     return NULL;
   
 
-  if ( !macro->tkseq ) {
-    if (tk->next->type == TK_OPENPARENS) {
-      if (tkseq(tk->next, 2, TK_OPENPARENS, TK_CLOSEPARENS) >= 0) {
-        lia_error(file->filename, tk->line, tk->column,
-          "Macro '%s' don't expects a sequence of tokens.", tk->text);
-        return NULL;
-      }
-      tk = tk->next->next;
-    }
-  } else {
-    if (tk->next->type != TK_OPENPARENS) {
-      lia_error(file->filename, tk->next->line, tk->next->column,
-        "%s", "Expected a list of tokens inside parens.");
-      return NULL;
-    }
-
-    macro->argtree = calloc(1, sizeof (macro_arg_t));
-
+  if (tk->next->type == TK_OPENPARENS) {
     tk = tk->next->next;
-    for (mtk_t *this = macro->tkseq; this; this = this->next) {
-      if (tk->type == TK_ID) {
-        next = macro_expand(tk, file, lia);
+    firstseq = tk;
+    for (; tk->type != TK_CLOSEPARENS; tk = tk->next)
+      hashint(&tkseq_hash, tk->type);
+  }
+
+  variant = tree_find(macro->variants, tkseq_hash);
+  if ( !variant ) {
+    lia_error(file->filename, first->line, first->column,
+      "Macro '%s' don't have a variant with this sequence. Instead try:",
+      macro->name);
+    tree_map(macro->variants, macro_seq_print);
+    return NULL;
+  }
+
+  argtree = calloc(1, sizeof *argtree);
+
+  if (firstseq) {
+    for (mtk_t *this = variant->tkseq; this; this = this->next) {
+      if (firstseq->type == TK_ID) {
+        next = macro_expand(firstseq, file, lia);
         if (next) {
-          tk = next->next;
+          firstseq = next->next;
         }
       }
 
       switch (this->type) {
-      case TK_ANY:
-        if (tk->type != TK_IMMEDIATE && tk->type != TK_CHAR) {
-          lia_error(file->filename, tk->line, tk->column,
-            "Expected a literal number or character, instead have: `%s'", tk->text);
-          return NULL;
-        }
-        break;
       case TK_REGISTER:
-        if ( !isreg(tk) ) {
-          lia_error(file->filename, tk->line, tk->column,
-            "Expected a register name, instead have: `%s'", tk->text);
+        if ( !isreg(firstseq) ) {
+          lia_error(file->filename, firstseq->line, firstseq->column,
+            "Expected a register name, instead have: `%s'", firstseq->text);
           return NULL;
         }
         break;
       default:
-        if (this->type != tk->type) {
-          lia_error(file->filename, tk->line, tk->column,
+        if (this->type != firstseq->type) {
+          lia_error(file->filename, firstseq->line, firstseq->column,
             "Expected `%s' token, instead have: `%s'", tktype2name(this->type),
-            tk->text);
+            firstseq->text);
           return NULL;
         }
       }
 
       if (this->name) {
-        arg = tree_insert(macro->argtree, sizeof *arg, hash(this->name));
+        arg = tree_insert(argtree, sizeof *arg, hash(this->name));
         
         arg->name = this->name;
-        arg->type = tk->type;
-        arg->body = tk;
+        arg->type = firstseq->type;
+        arg->body = firstseq;
       }
 
-      tk = tk->next;
+      firstseq = firstseq->next;
     }
   }
 
   token_t *new;
-  token_t *this = macro->body;
+  token_t *this = variant->body;
   token_t *body = malloc(sizeof *body);
   first->last->next = body;
 
   if (this->type == TK_ID)
-    arg = tree_find(macro->argtree, hash(this->text));
+    arg = tree_find(argtree, hash(this->text));
   
   if (arg) {
     memcpy(body, arg->body, sizeof *body);
   } else {
-    memcpy(body, macro->body, sizeof *body);
+    memcpy(body, variant->body, sizeof *body);
     body->line = first->line;
     body->column = first->column;
   }
@@ -244,7 +288,7 @@ token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
 
     arg = NULL;
     if (this->type == TK_ID)
-      arg = tree_find(macro->argtree, hash(this->text));
+      arg = tree_find(argtree, hash(this->text));
     
     if (arg) {
       memcpy(new, arg->body, sizeof *new);
@@ -260,8 +304,7 @@ token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
       break;
   }
 
-  tree_free(macro->argtree);
-  macro->argtree = NULL;
+  tree_free(argtree);
 
   body->next = tk->next;
   tk->next->last = body;

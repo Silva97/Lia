@@ -93,13 +93,31 @@ inst_t *inst_add(inst_t *list, inst_type_t type)
  */
 int lia_parser(lia_t *lia, imp_t *file)
 {
+  token_t *this = file->tklist;
+
+  if ( !lia->proctree )
+    lia->proctree = calloc(1, sizeof (proc_t));
+  if ( !lia->cmdtree )
+    lia->cmdtree = calloc(1, sizeof (cmd_t));
+  if ( !lia->macrotree )
+    lia->macrotree = calloc(1, sizeof (macro_t));
+  if ( !lia->instlist )
+    lia->instlist = calloc(1, sizeof (inst_t));
+
+  while (this && this->type != TK_EOF) {
+    this = inst_parser(lia, file, this);
+  }
+
+  return lia->errcount;
+}
+
+token_t *inst_parser(lia_t *lia, imp_t *file, token_t *this)
+{
   metakeyword_t meta;
   keyword_t key;
   token_t *tk;
   token_t *next;
-  token_t *this = file->tklist;
-  int errcount = 0;
-
+  
   token_t *( *metakeys[] )(KEY_ARGS) = {
     [META_NEW] = meta_new,
     [META_IMPORT] = meta_import,
@@ -123,122 +141,110 @@ int lia_parser(lia_t *lia, imp_t *file)
     [KEY_ASES] = key_ases
   };
 
-  if ( !lia->proctree )
-    lia->proctree = calloc(1, sizeof (proc_t));
-  if ( !lia->cmdtree )
-    lia->cmdtree = calloc(1, sizeof (cmd_t));
-  if ( !lia->macrotree )
-    lia->macrotree = calloc(1, sizeof (macro_t));
-  if ( !lia->instlist )
-    lia->instlist = calloc(1, sizeof (inst_t));
 
-  while (this && this->type != TK_EOF) {
-    switch (this->type) {
-    case TK_SEPARATOR:
-      break; // Just ignore it
+  switch (this->type) {
+  case TK_SEPARATOR:
+    break; // Just ignore it
 
-    case TK_OPENBRACKET:
-      this = metanext(this);
-      meta = ismetakey(this);
-      if (meta == META_NONE) {
-        lia_error(file->filename, this->next->line, this->next->column,
-          "Expected a meta-keyword, instead have `%s'", this->next->text);
-        
-        this = tknext(this, TK_CLOSEBRACKET);
-        if (this->next)
-          this = this->next;
-
-        errcount++;
-        break;
-      }
-
-      next = metakeys[meta](this, file, lia);
-      if ( !next ) {
-        this = tknext(this, TK_CLOSEBRACKET);
-        if (this->next)
-          this = this->next;
-        
-        errcount++;
-        break;
-      }
-
-      if (next->type != TK_CLOSEBRACKET) {
-        lia_error(file->filename, next->line, next->column,
-          "Expected ']', instead have `%s'", next->text);
-
-        this = next;
-        errcount++;
-        break;
-      }
-
-      if ( next->next->type != TK_SEPARATOR && next->next->type != TK_EOF ) {
-        lia_error(file->filename, next->next->line, next->next->column,
-          "Expected a instruction separator, instead have `%s'",
-          next->next->text);
-        
-        this = tknext(next->next, TK_SEPARATOR)->last;
-        errcount++;
-        break;
-      }
-
-      this = next->next;
-      break;
-    
-    case TK_ID:
-      next = macro_expand(this, file, lia);
-      if (next) {
-        this = next;
-        break;
-      }
-
-      if ( this->next->type == TK_OPENPARENS ) {
-        this = tknext(this, TK_CLOSEPARENS);
-        errcount++;
-        break;
-      }
-
-      tk = this->next;
-      for (; tk->type != TK_SEPARATOR && tk->type != TK_EOF; tk = tk->next) {
-        next = macro_expand(tk, file, lia);
-        if (next) {
-          tk->last->next = next->next;
-        }
-      }
-
-      key = iskey(this);
-      next = keys[key](this, file, lia);
-      if ( !next ) {
-        this = tknext(this, TK_SEPARATOR)->last;         
-        errcount++;
-        break;
-      }
-
-      if (next->type != TK_SEPARATOR && next->type != TK_EOF) {
-        lia_error(file->filename, next->line, next->column,
-          "Expected a instruction separator, instead have `%s'",
-          next->text);
-        
-        this = tknext(next, TK_SEPARATOR)->last;
-        errcount++;
-        break;
-      }
-
-      this = next;
-      break;
-    
-    default:
-      lia_error(file->filename, this->line, this->column,
-        "Parser: Unexpected token `%s'", this->text);
+  case TK_OPENBRACKET:
+    this = metanext(this);
+    meta = ismetakey(this);
+    if (meta == META_NONE) {
+      lia_error(file->filename, this->next->line, this->next->column,
+        "Expected a meta-keyword, instead have `%s'", this->next->text);
       
-      this = tknext(this, TK_SEPARATOR);
+      this = tknext(this, TK_CLOSEBRACKET);
       if (this->next)
         this = this->next;
 
-      errcount++;
+      lia->errcount++;
+      break;
     }
 
-    this = this->next;
+    next = metakeys[meta](this, file, lia);
+    if ( !next ) {
+      this = tknext(this, TK_CLOSEBRACKET);
+      if (this->next)
+        this = this->next;
+      
+      lia->errcount++;
+      break;
+    }
+
+    if (next->type != TK_CLOSEBRACKET) {
+      lia_error(file->filename, next->line, next->column,
+        "Expected ']', instead have `%s'", next->text);
+
+      this = next;
+      lia->errcount++;
+      break;
+    }
+
+    if ( next->next->type != TK_SEPARATOR && next->next->type != TK_EOF ) {
+      lia_error(file->filename, next->next->line, next->next->column,
+        "Expected a instruction separator, instead have `%s'",
+        next->next->text);
+      
+      this = tknext(next->next, TK_SEPARATOR)->last;
+      lia->errcount++;
+      break;
+    }
+
+    this = next->next;
+    break;
+  
+  case TK_ID:
+    next = macro_expand(this, file, lia);
+    if (next) {
+      this = next;
+      break;
+    }
+
+    if ( this->next->type == TK_OPENPARENS ) {
+      this = tknext(this, TK_CLOSEPARENS);
+      lia->errcount++;
+      break;
+    }
+
+    tk = this->next;
+    for (; tk->type != TK_SEPARATOR && tk->type != TK_EOF; tk = tk->next) {
+      next = macro_expand(tk, file, lia);
+      if (next) {
+        tk->last->next = next->next;
+      }
+    }
+
+    key = iskey(this);
+    next = keys[key](this, file, lia);
+    if ( !next ) {
+      this = tknext(this, TK_SEPARATOR)->last;         
+      lia->errcount++;
+      break;
+    }
+
+    if (next->type != TK_SEPARATOR && next->type != TK_EOF) {
+      lia_error(file->filename, next->line, next->column,
+        "Expected a instruction separator, instead have `%s'",
+        next->text);
+      
+      this = tknext(next, TK_SEPARATOR)->last;
+      lia->errcount++;
+      break;
+    }
+
+    this = next;
+    break;
+  
+  default:
+    lia_error(file->filename, this->line, this->column,
+      "Parser: Unexpected token `%s'", this->text);
+    
+    this = tknext(this, TK_SEPARATOR);
+    if (this->next)
+      this = this->next;
+
+    lia->errcount++;
   }
 
-  return errcount;
+  return this->next;
 }

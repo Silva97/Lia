@@ -79,7 +79,7 @@ imp_t *lia_process(char *filename, FILE *input, lia_t *lia)
     return NULL;
   }
   
-  lia->errcount += lia_parser(lia, file);
+  lia_parser(lia, file);
   return file;
 }
 

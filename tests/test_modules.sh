@@ -41,4 +41,5 @@ test_lia || exit 1
 test_var || exit 2
 test_expr || exit 3
 
+echo "Modules OK!"
 exit 0

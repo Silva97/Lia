@@ -12,11 +12,4 @@ install:
 
 before_script: make
 
-script:
-  - make test name=lexer
-  - make test name=parser
-  - make test name=compiler
-  - make test name=cmd
-  - make test name=procedure
-  - make test name=macros
-  - bash test_modules.sh
+script: bash runtests.sh

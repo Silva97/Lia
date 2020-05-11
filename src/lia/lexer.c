@@ -118,7 +118,7 @@ token_type_t name2tktype(char *name)
   if ( !strcmp(name, "reg") )
     return TK_REGISTER;
   
-  return -1;
+  return TK_INVALID;
 }
 
 const char *tktype2name(token_type_t type)

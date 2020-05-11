@@ -29,6 +29,7 @@
 
 /** Enumeration to token's type. */
 typedef enum token_type {
+  TK_INVALID,
   TK_EOF,
   TK_ID,
   TK_SEPARATOR,

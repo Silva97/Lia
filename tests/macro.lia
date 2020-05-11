@@ -1,12 +1,13 @@
 [import "modules/lia"]
 
-[macro test(abc: str ',' def: imm) =
+[macro test(abc: str ',' def: number) =
   say abc
   set ra, def
 ]
 
 [new break = ".61"]
 [macro name = break]
+[macro name(msg: str) = say msg "\n"]
 
 test("Luiz", 10)
 test("wrong" 99)
@@ -14,6 +15,7 @@ test("wrong" 99)
 name()
 name
 name(1)
+name("Hi!")
 
 [macro ln(txt: str) = txt; say "\n"]
 say ln("Hi World!")

@@ -7,44 +7,19 @@
 
 static void macro_print(macro_t *macro)
 {
-  printf("%s( ", macro->name);
-
-  for (mtk_t *this = macro->tkseq; this; this = this->next) {
-    printf("%d ", this->type);
-  }
-
-  fputs(") = ", stdout);
-
-  for (token_t *this = macro->body; this; this = this->next) {
-    printf("%s ", this->text);
-  }
-
-  putchar('\n');
+  printf("%s ->\n", macro->name);
+  tree_map(macro->variants, macro_seq_print);
 }
 
-static void tree_print(macro_t *tree, unsigned int level)
+static void tree_print(macro_t *tree)
 {
-  const int lv = 4;
   if (tree->right)
-    tree_print(tree->right, level + lv);
-
-  
-  if (level > lv) {
-    printf("%*c+", level - lv + 2, '\0');
-    for (int i = 0; i < lv - 1; i++)
-      putchar('-');
-    
-    putchar(' ');
-  } else if (level == lv) {
-    fputs(" +--- ", stdout);
-  } else {
-    fputs("+ ", stdout);
-  }
+    tree_print(tree->right);
 
   macro_print(tree);
   
   if (tree->left)
-    tree_print(tree->left, level + lv);
+    tree_print(tree->left);
 }
 
 
@@ -58,7 +33,9 @@ test_t test_macros(void)
     METRIC_TEST_FAIL("Test file not found.");
 
   lia_process(TESTMACRO, input, lia);
-  tree_print(lia->macrotree, 0);
+
+  puts("--------------");
+  tree_print(lia->macrotree);
 
   METRIC_ASSERT(lia->errcount == 2);
   METRIC_TEST_OK("");

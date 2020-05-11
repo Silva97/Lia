@@ -1,0 +1,199 @@
+#####
+# Developed by Luiz Felipe <felipe.silva337@yahoo.com>
+# Date: 2020-05-11
+# GitHub: https://github.com/Silva97
+# Distributed under the MIT License.
+#
+# This module implements expressions for basic operations using
+# 'lia' and 'var' module.
+#####
+
+## Increment ##
+[macro expr(x: reg '+' '+') =
+  mov rc, x
+  inc x
+]
+
+[macro expr('+' '+' x: reg) =
+  inc x
+  mov rc, x
+]
+
+## Decrement ##
+[macro expr(x: reg '-' '-') =
+  mov rc, x
+  dec x
+]
+
+[macro expr('-' '-' x: reg) =
+  dec x
+  mov rc, x
+]
+
+## Gets a variable value ##
+[macro expr('$' var: number) =
+  getvar rc, var
+]
+
+## Gets a character ##
+[macro expr(c: char) =
+  set rc, c
+]
+
+## Calling procedures ##
+[macro expr(fun: id) =
+  call fun
+  mov rc, ss
+]
+
+[macro expr(fun: id arg1: number) =
+  cl1 fun, arg1
+  mov rc, ss
+]
+
+[macro expr(fun: id arg1: reg) =
+  mov rc, arg1
+  call fun
+  mov rc, ss
+]
+
+
+## Sum ##
+[macro expr(x: number '+' y:number) =
+  set rc, x
+  iadd rc, y
+]
+
+[macro expr(x: reg '+' y:number) =
+  mov rc, x
+  iadd rc, y
+]
+
+[macro expr(x: number '+' y:reg) =
+  mov rc, y
+  iadd rc, x
+]
+
+[macro expr(x: reg '+' y:reg) =
+  mov rb, x
+  mov rc, y
+  add rc, rb
+]
+
+## Subtraction ##
+[macro expr(x: number '-' y:number) =
+  set rc, x
+  isub rc, y
+]
+
+[macro expr(x: reg '-' y:number) =
+  mov rc, x
+  isub rc, y
+]
+
+[macro expr(x: number '-' y:reg) =
+  mov rb, y
+  set rc, x
+  sub rc, rb
+]
+
+[macro expr(x: reg '-' y:reg) =
+  mov rb, y
+  mov rc, x
+  sub rc, rb
+]
+
+## Multiplication ##
+[macro expr(x: number '*' y:number) =
+  set rc, x
+  imul rc, y
+]
+
+[macro expr(x: reg '*' y:number) =
+  mov rc, x
+  imul rc, y
+]
+
+[macro expr(x: number '*' y:reg) =
+  mov rc, y
+  imul rc, x
+]
+
+[macro expr(x: reg '*' y:reg) =
+  mov rb, x
+  mov rc, y
+  mul rc, rb
+]
+
+## Division ##
+[macro expr(x: number '/' y:number) =
+  set rc, x
+  idiv rc, y
+]
+
+[macro expr(x: reg '/' y:number) =
+  mov rc, x
+  idiv rc, y
+]
+
+[macro expr(x: number '/' y:reg) =
+  mov rb, y
+  set rc, x
+  div rc, rb
+]
+
+[macro expr(x: reg '/' y:reg) =
+  mov rb, y
+  mov rc, x
+  div rc, rb
+]
+
+## Modulus ##
+[macro expr(x: number '%' y:number) =
+  set rc, x
+  idiv rc, y
+  mov rc, ra
+]
+
+[macro expr(x: reg '%' y:number) =
+  mov rc, x
+  idiv rc, y
+  mov rc, ra
+]
+
+[macro expr(x: number '%' y:reg) =
+  mov rb, y
+  set rc, x
+  div rc, rb
+  mov rc, ra
+]
+
+[macro expr(x: reg '%' y:reg) =
+  mov rb, y
+  mov rc, x
+  div rc, rb
+  mov rc, ra
+]
+
+## Power ##
+[macro expr(x: number '*' '*' y:number) =
+  set rc, x
+  ipow rc, y
+]
+
+[macro expr(x: reg '*' '*' y:number) =
+  mov rc, x
+  ipow rc, y
+]
+
+[macro expr(x: number '*' '*' y:reg) =
+  mov rb, y
+  set rc, x
+  pow rc, rb
+]
+
+[macro expr(x: reg '*' '*' y:reg) =
+  mov rb, y
+  mov rc, x
+  pow rc, rb
+]

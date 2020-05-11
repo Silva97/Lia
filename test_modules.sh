@@ -28,8 +28,17 @@ function test_var() {
   return
 }
 
+function test_expr() {
+  local expects="ABCDEFGH"
+  local output=$(./lia "$tdir/test_expr.lia" -o- | ases)
+
+  assert_equ "$expects" "$output"
+  return
+}
+
 
 test_lia || exit 1
 test_var || exit 2
+test_expr || exit 3
 
 exit 0

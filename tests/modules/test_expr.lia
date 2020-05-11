@@ -1,0 +1,31 @@
+[import "modules/lia", "modules/expr"]
+
+mov rd, (15 + (55 - 5))
+out rd  # A
+
+mov rd, ((56 - 5) + 15)
+out rd  # B
+
+mov rd, (7 + (10 * 6))
+out rd  # C
+
+mov rd, ((10 * 6) + 8)
+out rd  # D
+
+set re, 11
+
+mov rd, ((re * (12 / 2)) + 3)
+out rd  # E
+
+mov rd, ( ( ( (3 * (re % 4)) * 9 ) / 2 ) + 30 )
+out rd  # F
+
+set re, 4
+set rf, 3
+mov rd, ((re ** rf) + 7)
+out rd  # G
+
+mov rd, ((4 ** rf) + 8)
+out rd  # H
+
+iout '\n'

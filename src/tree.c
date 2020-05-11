@@ -54,6 +54,8 @@ void *tree_find(void *tree, unsigned long int hashname)
     return NULL;
   
   tree_t *root = tree;
+  if ( !root->hashname )
+    return NULL;
 
   if (root->hashname == hashname)
     return root;
@@ -83,4 +85,26 @@ void tree_free(void *tree)
     tree_free(root->right);
   
   free(root);
+}
+
+/**
+ * @brief Calls a function in all tree elements
+ * 
+ * @param tree    The tree to map
+ * @param mapper  The callee function.
+ */
+void tree_map(void *tree, void (*mapper)(void *))
+{
+  if ( !tree || !mapper )
+    return;
+  
+  tree_t *root = tree;
+
+  if (root->left)
+    tree_map(root->left, mapper);
+  
+  mapper(root);
+
+  if (root->right)
+    tree_map(root->right, mapper);
 }

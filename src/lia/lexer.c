@@ -91,6 +91,8 @@ token_type_t name2tktype(char *name)
     return TK_ASTERISK;
   if ( !strcmp(name, "/") )
     return TK_SLASH;
+  if ( !strcmp(name, "%") )
+    return TK_PERCENT;
   if ( !strcmp(name, "\\") )
     return TK_BKSLASH;
   if ( !strcmp(name, ">") )
@@ -142,6 +144,7 @@ const char *tktype2name(token_type_t type)
     [TK_MINUS] = "-",
     [TK_ASTERISK] = "*",
     [TK_SLASH] = "/",
+    [TK_PERCENT] = "%",
     [TK_BKSLASH] = "\\",
     [TK_GT] = ">",
     [TK_LT] = "<",
@@ -249,6 +252,10 @@ token_t *lia_lexer(char *filename, FILE *input)
     case '/':
       this->type = TK_SLASH;
       strcpy(this->text, "/");
+      break;
+    case '%':
+      this->type = TK_PERCENT;
+      strcpy(this->text, "%");
       break;
     
     case '\\':

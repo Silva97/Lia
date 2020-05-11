@@ -44,6 +44,7 @@ typedef enum token_type {
   TK_MINUS,
   TK_ASTERISK,
   TK_SLASH,
+  TK_PERCENT,
   TK_BKSLASH,
   TK_GT,
   TK_LT,

@@ -1,0 +1,10 @@
+syntax "ases" "\.ases$"
+header "^#!.*ases$"
+comment "#"
+
+color  brightred      "[()@$*?~]"
+icolor brightcyan     "[a-lp]"
+color  brightmagenta  "[><+\-\.!=]"
+color  brightblue     "[0-9]"
+
+color brightgreen "#.*"

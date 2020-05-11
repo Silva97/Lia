@@ -1,0 +1,24 @@
+%YAML 1.2
+---
+name: Ases
+file_extensions: [ases]
+first_line_match: '^#!.*ases$'
+scope: source.ases
+
+contexts:
+  main:
+    - match: '#'
+      push: comment
+    - match: '[()@$*?~]'
+      scope: keyword.control.lia
+    - match: '[a-lA-LpP]'
+      scope: variable.language.lia
+    - match: '[><+\-\.!=]'
+      scope: variable.function.lia
+    - match: '[0-9]'
+      scope: constant.numeric.complex.lia
+
+  comment:
+    - meta_scope: comment.line.number-sign.lia
+    - match: '\n'
+      pop: true

@@ -1,0 +1,115 @@
+%YAML 1.2
+---
+name: Lia
+file_extensions: [lia]
+scope: source.lia
+
+variables:
+  tkid: '[a-zA-Z_][a-zA-Z0-9_]*'
+
+contexts:
+  main:
+    - include: keywords
+    - include: meta
+    - include: string
+    - include: char
+    - match: '#'
+      push: comment
+    - match: \b(r[a-l]|dp|ss)\b
+      scope: variable.language.lia
+    - match: \b(0x[a-fA-F0-9]+|0[0-7]*|[1-9][0-9]*)\b
+      scope: constant.numeric.lia
+
+  comment:
+    - meta_scope: comment.line.number-sign.lia
+    - match: '\n'
+      pop: true
+
+  keywords:
+    - match: \b(ifn?z|endif|call|ret|proc|endproc|func|say|load|store|push|pop)\b
+      scope: keyword.control.lia
+    - match: \bases\b
+      scope: keyword.control.lia
+      push: ases
+
+  ases:
+    - match: '"'
+      push: inside_ases_body
+    - match: \n
+      pop: true
+
+  inside_ases_body:
+    - meta_scope: string.quoted.double.lia
+    - match: '[()@$*?~]'
+      scope: keyword.control.lia
+    - match: '[a-lA-LpP]'
+      scope: variable.language.lia
+    - match: '[\>\<\+\-\.\!\=]'
+      scope: variable.function.lia
+    - match: '[0-9]'
+      scope: constant.numeric.complex.lia
+    - match: '"'
+      pop: true
+
+  meta:
+    - match: \[\s*\bimport\b
+      scope: entity.name.lia
+      push: import
+    - match: \[\s*\bnew\b
+      scope: entity.name.lia
+      push: new
+    - match: \[\s*\bmacro\b
+      scope: entity.name.lia
+      push: macro
+
+  import:
+    - include: string
+    - match: '\]'
+      scope: entity.name.lia
+      pop: true
+
+  new:
+    - match: '\='
+      scope: entity.other.attribute-name.lia
+    - match: '(\b[m-oM-Oq-zQ-Z]\b)\s*(\:)\s*(\b[rips]\b)'
+      captures:
+        1: string.quoted.double.lia
+        2: entity.other.attribute-name.lia
+        3: constant.character.lia
+    - match: '"'
+      push: inside_ases_body
+    - match: '\]'
+      scope: entity.name.lia
+      pop: true
+
+  macro:
+    - include: main
+    - match: '\='
+      scope: entity.other.attribute-name.lia
+    - match: '(\b{{tkid}}\b)\s*(\:)\s*(\b(str|char|number|reg|id)\b)'
+      captures:
+        1: variable.function.lia
+        2: entity.other.attribute-name.lia
+        3: constant.character.lia
+    - match: '\]'
+      scope: entity.name.lia
+      pop: true
+
+  string:
+    - match: '"'
+      push: inside_string
+
+  inside_string:
+    - meta_scope: string.quoted.double.lia
+    - match: '\\.'
+      scope: constant.character.escape.lia
+    - match: '\n'
+      scope: invalid.illegal.lia
+    - match: '"'
+      pop: true
+
+  char:
+    - match: (\'\\.\')|(\'.\')
+      captures:
+        1: constant.character.escape.lia
+        2: string.quoted.single.lia

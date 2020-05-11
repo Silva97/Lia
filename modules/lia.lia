@@ -77,6 +77,14 @@
 [new div  x:r y:r = "Y!Xa=b?2 .!$B5=+!9?*=x A!B5A~(X+x@A?(=a@"]
 [new idiv x:r y:i = "XaYb?2 .!$B5=+!9?*=x A!B5A~(X+x@A?(=a@"]
 
+## Power: op1 = pow(op1, op2) ##
+[new pow  x:r y:r =
+  "Y-!>X-!>$L!> <<=>>!Xab $B4 =-!~*Ax <=l<<=-!>>~*<<"]
+[new ipow x:r y:i =
+  "Y-!>X-!>$L!> <<=>>!Xab $B4 =-!~*Ax <=l<<=-!>>~*<<"]
+#    3   2   1    2  0          0      1     3
+
+
 ## do..while block for loops. ##
 [new do      = "$L!>"]
 [new whilez  = "!<=l>=<?*"]

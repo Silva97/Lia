@@ -271,6 +271,8 @@ token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
 
   if (this->type == TK_ID)
     arg = tree_find(argtree, hash(this->text));
+  else
+    arg = NULL;
   
   if (arg) {
     memcpy(body, arg->body, sizeof *body);

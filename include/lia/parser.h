@@ -14,6 +14,7 @@
 
 /** The name of the special expression macro */
 #define MACRO_EXPR "expr"
+#define EXPR_LVALUE "rc"
 
 
 metakeyword_t ismetakey(token_t *tk);

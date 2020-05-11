@@ -9,6 +9,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include "lia/lia.h"
 #include "tree.h"
@@ -198,6 +199,7 @@ token_t *meta_macro(KEY_ARGS)
  */
 token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
 {
+  bool expr = false;
   macro_t *macro;
   macro_var_t *variant;
   macro_arg_t *argtree;
@@ -207,16 +209,23 @@ token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
   token_t *next;
   token_t *firstseq = NULL;
 
-  macro = tree_find(lia->macrotree, hash(tk->text));
+  if (tk->type == TK_OPENPARENS) {
+    macro = tree_find(lia->macrotree, hash(MACRO_EXPR));
+    tk = tk->last;
+    expr = true;
+  } else {
+    macro = tree_find(lia->macrotree, hash(tk->text));
+    expr = !strcmp(tk->text, MACRO_EXPR);
+  }
+
   if ( !macro )
     return NULL;
-  
 
   if (tk->next->type == TK_OPENPARENS) {
     firstseq = tk->next;
     tk = tk->next->next;
     for (; tk->type != TK_CLOSEPARENS; tk = tk->next) {
-      if (tk->type == TK_ID) {
+      if (tk->type == TK_ID || tk->type == TK_OPENPARENS) {
         next = macro_expand(tk, file, lia);
         if (next) {
           tk->last->next = next->next;
@@ -319,8 +328,26 @@ token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
 
   tree_free(argtree);
 
-  body->next = tk->next;
-  tk->next->last = body;
+  if (expr) {
+    this = first->last->next;
+    while (this && this->type != TK_EOF) {
+      this = inst_parser(lia, file, this);
+    }
+
+    this = calloc(1, sizeof (token_t));
+    this->type = TK_ID;
+    this->line = first->line;
+    this->column = first->column;
+    strcpy(this->text, EXPR_LVALUE);
+
+    first->last->next = this;
+    this->last = first->last;
+    this->next = tk->next;
+    tk->next->last = this;
+  } else {
+    body->next = tk->next;
+    tk->next->last = body;
+  }
 
   return first->last;
 }

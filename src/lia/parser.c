@@ -193,6 +193,17 @@ token_t *inst_parser(lia_t *lia, imp_t *file, token_t *this)
     this = next->next;
     break;
   
+  case TK_OPENPARENS:
+    next = macro_expand(this, file, lia);
+    if ( !next ) {
+      this = tknext(this, TK_CLOSEPARENS);
+      lia->errcount++;
+      break;
+    }
+
+    this = next;
+    break;
+  
   case TK_ID:
     next = macro_expand(this, file, lia);
     if (next) {
@@ -208,6 +219,9 @@ token_t *inst_parser(lia_t *lia, imp_t *file, token_t *this)
 
     tk = this->next;
     for (; tk->type != TK_SEPARATOR && tk->type != TK_EOF; tk = tk->next) {
+      if (tk->type != TK_OPENPARENS && tk->type != TK_ID)
+        continue;
+
       next = macro_expand(tk, file, lia);
       if (next) {
         tk->last->next = next->next;

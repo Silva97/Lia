@@ -213,9 +213,18 @@ token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
   
 
   if (tk->next->type == TK_OPENPARENS) {
+    firstseq = tk->next;
     tk = tk->next->next;
-    firstseq = tk;
     for (; tk->type != TK_CLOSEPARENS; tk = tk->next) {
+      if (tk->type == TK_ID) {
+        next = macro_expand(tk, file, lia);
+        if (next) {
+          tk->last->next = next->next;
+          tk = next->next;
+          
+        }
+      }
+
       if ( isreg(tk) )
         hashint(&tkseq_hash, TK_REGISTER);
       else
@@ -235,14 +244,8 @@ token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
   argtree = calloc(1, sizeof *argtree);
 
   if (firstseq) {
+    firstseq = firstseq->next;
     for (mtk_t *this = variant->tkseq; this; this = this->next) {
-      if (firstseq->type == TK_ID) {
-        next = macro_expand(firstseq, file, lia);
-        if (next) {
-          firstseq = next->next;
-        }
-      }
-
       switch (this->type) {
       case TK_REGISTER:
         if ( !isreg(firstseq) ) {

@@ -29,7 +29,6 @@
 
 /** Enumeration to token's type. */
 typedef enum token_type {
-  TK_INVALID,
   TK_EOF,
   TK_ID,
   TK_SEPARATOR,
@@ -56,7 +55,8 @@ typedef enum token_type {
   TK_IMMEDIATE,
   TK_CHAR,
   TK_STRING,
-  TK_REGISTER
+  TK_REGISTER,
+  TK_INVALID       /**< Must be the final value */
 } token_type_t;
 
 /** Structure of a token */

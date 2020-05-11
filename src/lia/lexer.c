@@ -67,59 +67,42 @@ int chresc(int c)
  */
 token_type_t name2tktype(char *name)
 {
-  if ( !strcmp(name, ";") )
-    return TK_SEPARATOR;
-  if ( !strcmp(name, "[") )
-    return TK_OPENBRACKET;
-  if ( !strcmp(name, "]") )
-    return TK_CLOSEBRACKET;
-  if ( !strcmp(name, "(") )
-    return TK_OPENPARENS;
-  if ( !strcmp(name, ")") )
-    return TK_CLOSEPARENS;
-  if ( !strcmp(name, ":") )
-    return TK_COLON;
-  if ( !strcmp(name, ",") )
-    return TK_COMMA;
-  if ( !strcmp(name, "=") )
-    return TK_EQUAL;
-  if ( !strcmp(name, "+") )
-    return TK_PLUS;
-  if ( !strcmp(name, "-") )
-    return TK_MINUS;
-  if ( !strcmp(name, "*") )
-    return TK_ASTERISK;
-  if ( !strcmp(name, "/") )
-    return TK_SLASH;
-  if ( !strcmp(name, "%") )
-    return TK_PERCENT;
-  if ( !strcmp(name, "\\") )
-    return TK_BKSLASH;
-  if ( !strcmp(name, ">") )
-    return TK_GT;
-  if ( !strcmp(name, "<") )
-    return TK_LT;
-  if ( !strcmp(name, "$") )
-    return TK_DOLLAR;
-  if ( !strcmp(name, "&") )
-    return TK_AND;
-  if ( !strcmp(name, "|") )
-    return TK_PIPE;
-  if ( !strcmp(name, "!") )
-    return TK_EXCLAMATION;
-  if ( !strcmp(name, "?") )
-    return TK_QUESTION;
-  if ( !strcmp(name, "id") )
-    return TK_ID;
-  if ( !strcmp(name, "number") )
-    return TK_IMMEDIATE;
-  if ( !strcmp(name, "char") )
-    return TK_CHAR;
-  if ( !strcmp(name, "str") )
-    return TK_STRING;
-  if ( !strcmp(name, "reg") )
-    return TK_REGISTER;
-  
+  const char *list[] = {
+    [TK_EOF] = ":EOF:",
+    [TK_ID] = "id",
+    [TK_IMMEDIATE] = "number",
+    [TK_CHAR] = "char",
+    [TK_STRING] = "str",
+    [TK_REGISTER] = "reg",
+    [TK_SEPARATOR] = ";",
+    [TK_OPENBRACKET] = "[",
+    [TK_CLOSEBRACKET] = "]",
+    [TK_OPENPARENS] = "(",
+    [TK_CLOSEPARENS] = ")",
+    [TK_COLON] = ":",
+    [TK_COMMA] = ",",
+    [TK_EQUAL] = "=",
+    [TK_PLUS] = "+",
+    [TK_MINUS] = "-",
+    [TK_ASTERISK] = "*",
+    [TK_SLASH] = "/",
+    [TK_PERCENT] = "%",
+    [TK_BKSLASH] = "\\",
+    [TK_GT] = ">",
+    [TK_LT] = "<",
+    [TK_DOLLAR] = "$",
+    [TK_AND] = "&",
+    [TK_PIPE] = "|",
+    [TK_EXCLAMATION] = "!",
+    [TK_QUESTION] = "?",
+    [TK_INVALID] = NULL
+  };
+
+  for (int i = 0; list[i]; i++) {
+    if ( !strcmp(list[i], name) )
+      return i;
+  }
+
   return TK_INVALID;
 }
 

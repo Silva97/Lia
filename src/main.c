@@ -53,6 +53,7 @@ int main(int argc, char **argv)
       pretty = true;
       break;
     case 'h':
+    case '?':
       show_help();
       return EXIT_SUCCESS;
     }

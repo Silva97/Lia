@@ -29,3 +29,20 @@
 
 ## Gets the input and set the variable ##
 [new invar v:i = "Pb KaV5A-p 0! Bp"]
+
+## Gets the variable address ##
+[new addr x:r v:i = "Pb KaV5A- x Bp"]
+
+## Gets the input of a string
+# op1 = address
+# op2 = Maximum size
+#
+# Returns in ra the size of the string.
+# The strings have null terminator.
+##
+[new readline x:r s:i =
+  "Pa Xp Sb$ 0+?(-7?(6!> B-b~* .!@@Ap SaB5"
+]
+
+## Prints a string ##
+[new print s:r = "PaSp $ =1> ~* Ap"]

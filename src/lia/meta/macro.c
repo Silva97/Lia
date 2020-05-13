@@ -330,7 +330,7 @@ token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia)
 
   if (expr) {
     this = first->last->next;
-    while (this && this->type != TK_EOF) {
+    while (this && this->type != TK_EOF && !file->stop) {
       this = inst_parser(lia, file, this);
     }
 

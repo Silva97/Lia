@@ -9,6 +9,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <stdarg.h>
 #include <string.h>
 #include "lia/lia.h"
@@ -104,7 +105,7 @@ int lia_parser(lia_t *lia, imp_t *file)
   if ( !lia->instlist )
     lia->instlist = calloc(1, sizeof (inst_t));
 
-  while (this && this->type != TK_EOF) {
+  while (this && this->type != TK_EOF && !file->stop) {
     this = inst_parser(lia, file, this);
   }
 
@@ -121,7 +122,8 @@ token_t *inst_parser(lia_t *lia, imp_t *file, token_t *this)
   token_t *( *metakeys[] )(KEY_ARGS) = {
     [META_NEW] = meta_new,
     [META_IMPORT] = meta_import,
-    [META_MACRO] = meta_macro
+    [META_MACRO] = meta_macro,
+    [META_REQUIRE] = meta_require
   };
 
   token_t *( *keys[] )(KEY_ARGS) = {

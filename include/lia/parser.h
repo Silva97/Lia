@@ -26,6 +26,7 @@ token_t *macro_expand(token_t *tk, imp_t *file, lia_t *lia);
 token_t *meta_new(KEY_ARGS);
 token_t *meta_import(KEY_ARGS);
 token_t *meta_macro(KEY_ARGS);
+token_t *meta_require(KEY_ARGS);
 
 keyword_t iskey(token_t *tk);
 token_t *cmd_verify(KEY_ARGS);

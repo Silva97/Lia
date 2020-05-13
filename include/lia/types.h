@@ -11,6 +11,7 @@
 #define _LIA_TYPES_H
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <inttypes.h>
 #include "tree.h"
 
@@ -101,6 +102,7 @@ typedef struct import {
   char filename[TKMAX];
   FILE *input;
 
+  bool stop;
   token_t *tklist; /**< The tokens' list */
 } imp_t;
 
@@ -207,15 +209,15 @@ typedef struct lia {
 
 /** Meta-keywords */
 typedef enum metakeyword {
-  META_NONE,
   META_NEW,
   META_IMPORT,
-  META_MACRO
+  META_MACRO,
+  META_REQUIRE,
+  META_NONE       /**< Must be the final value */
 } metakeyword_t;
 
 /** Keywords */
 typedef enum keyword {
-  KEY_NONE,
   KEY_FUNC,
   KEY_LOAD,
   KEY_STORE,
@@ -225,11 +227,11 @@ typedef enum keyword {
   KEY_RET,
   KEY_PROC,
   KEY_ENDPROC,
-  KEY_PRTAB,
   KEY_IF,
   KEY_ENDIF,
   KEY_SAY,
-  KEY_ASES
+  KEY_ASES,
+  KEY_NONE,      /**< Must be the final value */
 } keyword_t;
 
 #endif /* _LIA_TYPES_H */

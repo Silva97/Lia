@@ -24,32 +24,30 @@ keyword_t iskey(token_t *tk)
   if (tk->type != TK_ID)
     return KEY_NONE;
   
-  if ( !strcmp(tk->text, "func") )
-    return KEY_FUNC;
-  if ( !strcmp(tk->text, "load") )
-    return KEY_LOAD;
-  if ( !strcmp(tk->text, "store") )
-    return KEY_STORE;
-  if ( !strcmp(tk->text, "push") )
-    return KEY_PUSH;
-  if ( !strcmp(tk->text, "pop") )
-    return KEY_POP;
-  if ( !strcmp(tk->text, "call") )
-    return KEY_CALL;
-  if ( !strcmp(tk->text, "ret") )
-    return KEY_RET;
-  if ( !strcmp(tk->text, "proc") )
-    return KEY_PROC;
-  if ( !strcmp(tk->text, "endproc") )
-    return KEY_ENDPROC;
   if ( !strcmp(tk->text, "ifz") || !strcmp(tk->text, "ifnz") )
     return KEY_IF;
-  if ( !strcmp(tk->text, "endif") )
-    return KEY_ENDIF;
-  if ( !strcmp(tk->text, "say") )
-    return KEY_SAY;
-  if ( !strcmp(tk->text, "ases") )
-    return KEY_ASES;
+
+  const char *list[] = {
+    [KEY_FUNC] = "func",
+    [KEY_LOAD] = "load",
+    [KEY_STORE] = "store",
+    [KEY_PUSH] = "push",
+    [KEY_POP] = "pop",
+    [KEY_CALL] = "call",
+    [KEY_RET] = "ret",
+    [KEY_PROC] = "proc",
+    [KEY_ENDPROC] = "endproc",
+    [KEY_IF] = "",
+    [KEY_ENDIF] = "endif",
+    [KEY_SAY] = "say",
+    [KEY_ASES] = "ases",
+    [KEY_NONE] = NULL,
+  };
+  
+  for (int i = 0; list[i]; i++) {
+    if ( !strcmp(list[i], tk->text) )
+      return i;
+  }
   
   return KEY_NONE;
 }

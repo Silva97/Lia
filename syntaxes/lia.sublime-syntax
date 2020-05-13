@@ -52,7 +52,7 @@ contexts:
       pop: true
 
   meta:
-    - match: \[\s*\bimport\b
+    - match: \[\s*\b(import|require)\b
       scope: entity.name.lia
       push: import
     - match: \[\s*\bnew\b

@@ -5,7 +5,7 @@ color   brightred    "\<(r[a-l]|dp|ss)\>"
 icolor  brightwhite  "\<(0x[0-9a-f]+|0[0-7]+|[0-9]+)\>"
 
 icolor brightcyan      "(^|ifn?z)\s*\<[a-z_][a-z0-9_]*\>"
-color  brightmagenta   "(^|\[)\s*\<(import|new|macro)\>"
+color  brightmagenta   "(^|\[)\s*\<(import|new|macro|require)\>"
 color  brightblue      "(^|ifn?z)\s*\<(func|say|ases|ifn?z|endif|load|store|push|pop|call|ret|proc|endproc)\>"
 color  brightred       "(\[|\]|=)"
 color  brightmagenta   ":\s*\<([rips]|id|str|number|char|reg)\>"

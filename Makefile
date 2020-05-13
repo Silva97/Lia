@@ -23,11 +23,13 @@ OBJ=$(call src2obj,$(SRC))
 BIN=lia
 INSTPATH=/usr/local/bin
 
-all: starting $(OBJ) main.o
-	$(CC) $(CFLAGS) $(OBJ) $(OBJDIR)/main.o -o $(BIN)
+all: release
 
-debug: starting $(OBJ) main.o
-	$(CC) $(CFLAGS) -ggdb $(OBJ) $(OBJDIR)/main.o -o $(BIN)
+debug: CFLAGS += -ggdb
+debug: all
+
+release: starting $(OBJ) main.o
+	$(CC) $(CFLAGS) $(OBJ) $(OBJDIR)/main.o -o $(BIN)
 
 starting:
 	mkdir -p obj/lia/meta

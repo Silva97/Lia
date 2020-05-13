@@ -8,6 +8,8 @@
 # 'lia' and 'var' module.
 #####
 
+[require "lia"]
+
 ## Increment ##
 [macro expr(x: reg '+' '+') =
   mov rc, x

@@ -23,12 +23,18 @@ metakeyword_t ismetakey(token_t *tk)
   if (tk->type != TK_ID)
     return META_NONE;
   
-  if ( !strcmp(tk->text, "new") )
-    return META_NEW;
-  if ( !strcmp(tk->text, "import") )
-    return META_IMPORT;
-  if ( !strcmp(tk->text, "macro") )
-    return META_MACRO;
+  const char *list[] = {
+    [META_NEW] = "new",
+    [META_IMPORT] = "import",
+    [META_MACRO] = "macro",
+    [META_REQUIRE] = "require",
+    [META_NONE] = NULL
+  };
+  
+  for (int i = 0; list[i]; i++) {
+    if ( !strcmp(list[i], tk->text) )
+      return i;
+  }
   
   return META_NONE;
 }

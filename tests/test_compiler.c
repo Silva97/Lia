@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "lia/lia.h"
 #include "metric.h"
 
@@ -18,6 +19,11 @@ test_t test_compiler(void)
   char filename[513];
   FILE *input;
   lia_t *lia;
+  target_t *target = calloc(1, sizeof *target);
+  target->pretty = true;
+  target->start = target_ases_start;
+  target->end = target_ases_end;
+  target->compile = target_ases_compile;
 
   FILE *output = fopen(NULLFILE, "w");
 
@@ -43,7 +49,7 @@ test_t test_compiler(void)
       METRIC_TEST_FAIL("Syntactic error");
     }
 
-    lia_compiler(output, lia, 0);
+    lia_compiler(output, lia, target);
 
     printf(" | %d\n", lia->errcount);
     METRIC_ASSERT(lia->errcount == expected);

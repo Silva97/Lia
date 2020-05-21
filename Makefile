@@ -48,7 +48,7 @@ doc:
 	doxygen
 
 install:
-	rm -r ~/.lia
+	rm -rf ~/.lia
 	mkdir -p ~/.lia
 	cp $(BIN) $(INSTPATH)/
 	cp -r modules ~/.lia/

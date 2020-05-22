@@ -19,11 +19,13 @@ test_t test_compiler(void)
   char filename[513];
   FILE *input;
   lia_t *lia;
-  target_t *target = calloc(1, sizeof *target);
-  target->pretty = true;
-  target->start = target_ases_start;
-  target->end = target_ases_end;
-  target->compile = target_ases_compile;
+  target_t target = {
+    .pretty = true,
+    .name = "ases",
+    .start = target_ases_start,
+    .end = target_ases_end,
+    .compile = target_ases_compile
+  };
 
   FILE *output = fopen(NULLFILE, "w");
 
@@ -42,6 +44,7 @@ test_t test_compiler(void)
     fseek(input, 0, SEEK_SET);
 
     lia = calloc(1, sizeof *lia);
+    lia->target = &target;
     lia_process(filename, input, lia);
 
     if (lia->errcount) {
@@ -49,7 +52,7 @@ test_t test_compiler(void)
       METRIC_TEST_FAIL("Syntactic error");
     }
 
-    lia_compiler(output, lia, target);
+    lia_compiler(output, lia);
 
     printf(" | %d\n", lia->errcount);
     METRIC_ASSERT(lia->errcount == expected);

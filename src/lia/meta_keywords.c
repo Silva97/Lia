@@ -102,3 +102,29 @@ mtk_t *macro_tkseq_add(mtk_t *list, token_type_t type, char *name)
   list->next->name = name;
   return list->next;
 }
+
+/**
+ * @brief Replaces an char to an string.
+ * 
+ * @param dest         The buffer to writes new string
+ * @param src          The initial source string
+ * @param placeholder  The char to replaces
+ * @param new          The new string to replaces the char
+ */
+void chrrep(char *dest, char *src, int placeholder, const char *new)
+{
+  size_t size = strlen(new);
+
+  while (*src) {
+    if (*src != placeholder) {
+      *dest++ = *src++;
+      continue;
+    }
+
+    memcpy(dest, new, size);
+    dest += size;
+    src++;
+  }
+
+  *dest = '\0';
+}

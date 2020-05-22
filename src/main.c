@@ -5,7 +5,6 @@
 #include <getopt.h>
 #include <sys/stat.h>
 #include "lia/lia.h"
-#include "lia/target.h"
 #include "filepath.h"
 
 #define DEF_OUT "out.ases"
@@ -28,6 +27,7 @@ int main(int argc, char **argv)
   char *outname = DEF_OUT;
   target_t target = {
     .pretty = false,
+    .name = "ases",
     .start = target_ases_start,
     .end = target_ases_end,
     .compile = target_ases_compile
@@ -43,6 +43,7 @@ int main(int argc, char **argv)
   
   lia_t *lia = calloc(1, sizeof *lia);
   lia->pathlist = calloc( 1, sizeof (path_t) );
+  lia->target = &target;
 
 
   GETMOD(defmod);
@@ -113,7 +114,7 @@ int main(int argc, char **argv)
     return EXIT_FAILURE;
   }
 
-  if ( lia_compiler(output, lia, &target) ) {
+  if ( lia_compiler(output, lia) ) {
     if (output != stdout) {
       fclose(output);
       remove(outname);
@@ -131,7 +132,7 @@ int main(int argc, char **argv)
 
 int settarget(target_t *target, char *name)
 {
-  static char *const list[] = {
+  static const char *list[] = {
     "ases",
     NULL
   };
@@ -153,6 +154,7 @@ int settarget(target_t *target, char *name)
       target->start = liststart[i];
       target->end = listend[i];
       target->compile = listcompile[i];
+      target->name = list[i];
       return true;
     }
   }

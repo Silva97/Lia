@@ -27,6 +27,10 @@
 /** The arguments of the keyword's function */
 #define KEY_ARGS  token_t *tk, imp_t *file, lia_t *lia
 
+/** Arguments to target's functions */
+#define ARGTARGET FILE *output, lia_t *lia
+#define ARGCOMPILE FILE *output, inst_t *inst, lia_t *lia
+
 
 /** Enumeration to token's type. */
 typedef enum token_type {
@@ -193,6 +197,7 @@ typedef struct macro {
 
 /** A Lia's struct reserving all informations about a code */
 typedef struct lia {
+  struct target *target;
   proc_t *proctree;    /**< The procedures' tree */
   cmd_t *cmdtree;      /**< The commands' tree */
   imp_t *imptree;      /**< The imports' tree */
@@ -205,6 +210,21 @@ typedef struct lia {
   inst_t *thisproc;
   unsigned int errcount;
 } lia_t;
+
+/** Target to generates final code */
+typedef struct target {
+  int pretty;
+  const char *name;
+
+  /** Initializes the code */
+  void (*start)(ARGTARGET);
+  
+  /** Finalizes the code */
+  void (*end)(ARGTARGET);
+  
+  /** Compiles one instruction */
+  inst_t *(*compile)(ARGCOMPILE);
+} target_t;
 
 
 /** Meta-keywords */

@@ -23,7 +23,7 @@ void target_ases_start(ARGTARGET)
   for (int i = 0; i < PROCINDEX; i++)
     putc('>', output);
   
-  if (target->pretty)
+  if (lia->target->pretty)
     fputs("\n\n", output);
 }
 
@@ -43,7 +43,7 @@ inst_t *target_ases_compile(ARGCOMPILE)
   inst_t *ret_inst = inst;
   token_t *tk = inst->child->next;
 
-  int pretty = target->pretty;
+  int pretty = lia->target->pretty;
 
   for (int i = 0; tk && i < CMD_ARGC; i++) {
     switch (tk->type) {
@@ -178,9 +178,9 @@ inst_t *target_ases_compile(ARGCOMPILE)
     else
       fputs("?(", output);
     
-    target->pretty = false;
-    target_ases_compile(output, inst->next, lia, target);
-    target->pretty = pretty;
+    lia->target->pretty = false;
+    target_ases_compile(output, inst->next, lia);
+    lia->target->pretty = pretty;
     putc('@', output);
 
     ret_inst = inst->next;
@@ -223,7 +223,7 @@ inst_t *target_ases_compile(ARGCOMPILE)
   if (diff < 0)
     diff = 2;
 
-  if (target->pretty) {
+  if (lia->target->pretty) {
     fprintf(output, "%-*c# Line %04d: ", (int) diff,
       ' ', inst->child->line);
     

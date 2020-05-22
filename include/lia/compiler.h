@@ -16,6 +16,6 @@ void lia_ctx_push(lia_t *lia, inst_t *start, inst_type_t endtype);
 ctx_t *lia_ctx_pop(lia_t *lia);
 
 imp_t *lia_process(char *filename, FILE *input, lia_t *lia);
-int lia_compiler(FILE *output, lia_t *lia, target_t *target);
+int lia_compiler(FILE *output, lia_t *lia);
 
 #endif /* _LIA_COMPILER_H */

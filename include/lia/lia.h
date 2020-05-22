@@ -11,5 +11,6 @@
 #include "lia/parser.h"
 #include "lia/procedure.h"
 #include "lia/compiler.h"
+#include "lia/target.h"
 
 #endif /* _LIA_H */

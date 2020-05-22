@@ -92,9 +92,9 @@ imp_t *lia_process(char *filename, FILE *input, lia_t *lia)
  * @param target    Target to generate the code.
  * @return int      The number of errors.
  */
-int lia_compiler(FILE *output, lia_t *lia, target_t *target)
+int lia_compiler(FILE *output, lia_t *lia)
 {
-  if (!output || !lia || !target) {
+  if (!output || !lia) {
     fputs("Compiler: Invalid call", stderr);
     return 9999;
   }
@@ -106,7 +106,7 @@ int lia_compiler(FILE *output, lia_t *lia, target_t *target)
   if ( !this || !this->child )
     return lia->errcount;
   
-  target->start(output, lia, target);
+  lia->target->start(output, lia);
 
   // Compiling the procedures first.
   for (; this; this = next) {
@@ -117,7 +117,7 @@ int lia_compiler(FILE *output, lia_t *lia, target_t *target)
     }
 
     while (this->type != INST_ENDPROC) {
-      this = target->compile(output, this, lia, target);
+      this = lia->target->compile(output, this, lia);
 
       if ( !this->next )
         break;
@@ -125,7 +125,7 @@ int lia_compiler(FILE *output, lia_t *lia, target_t *target)
       this = this->next;
     }
 
-    this = target->compile(output, this, lia, target);
+    this = lia->target->compile(output, this, lia);
     next = this->next;
 
     if ( last == lia->instlist )
@@ -138,7 +138,7 @@ int lia_compiler(FILE *output, lia_t *lia, target_t *target)
 
   this = lia->instlist;
   while (this) {
-    this = target->compile(output, this, lia, target);
+    this = lia->target->compile(output, this, lia);
 
     if ( !this->next )
       break;
@@ -170,6 +170,6 @@ int lia_compiler(FILE *output, lia_t *lia, target_t *target)
     }
   }
 
-  target->end(output, lia, target);
+  lia->target->end(output, lia);
   return lia->errcount;
 }

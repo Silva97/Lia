@@ -8,7 +8,7 @@
 # 'lia' and 'var' module.
 #####
 
-[require "lia"]
+[require "$/lia"]
 
 ## Increment ##
 [macro expr(x: reg '+' '+') =

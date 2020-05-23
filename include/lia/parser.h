@@ -48,6 +48,8 @@ token_t *key_ases(KEY_ARGS);
 
 int tkseq(token_t *tk, unsigned int number, ...);
 inst_t *inst_add(inst_t *list, inst_type_t type);
+token_t *macro_set(macro_t *tree, char *name, token_type_t type);
+void macrostr_set(macro_t *tree, char *name, const char *value);
 int lia_parser(lia_t *lia, imp_t *file);
 token_t *inst_parser(lia_t *lia, imp_t *file, token_t *this);
 

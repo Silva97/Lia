@@ -169,7 +169,8 @@ token_t *inst_parser(lia_t *lia, imp_t *file, token_t *this)
     [META_NEW] = meta_new,
     [META_IMPORT] = meta_import,
     [META_MACRO] = meta_macro,
-    [META_REQUIRE] = meta_require
+    [META_REQUIRE] = meta_require,
+    [META_IF] = meta_if
   };
 
   token_t *( *keys[] )(KEY_ARGS) = {

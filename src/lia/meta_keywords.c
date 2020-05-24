@@ -28,6 +28,7 @@ metakeyword_t ismetakey(token_t *tk)
     [META_IMPORT] = "import",
     [META_MACRO] = "macro",
     [META_REQUIRE] = "require",
+    [META_IF] = "if",
     [META_NONE] = NULL
   };
   

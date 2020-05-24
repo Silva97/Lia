@@ -233,6 +233,7 @@ typedef enum metakeyword {
   META_IMPORT,
   META_MACRO,
   META_REQUIRE,
+  META_IF,
   META_NONE       /**< Must be the final value */
 } metakeyword_t;
 

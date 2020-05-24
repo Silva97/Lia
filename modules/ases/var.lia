@@ -8,6 +8,8 @@
 # variables in it.
 #####
 
+[require "$/lia"]
+
 ##
 # Allocate X spaces to use at variables
 # This use K register to preserve the start address of the stack frame.
@@ -33,6 +35,13 @@
 ## Gets the variable address ##
 [new addr x:r v:i = "Pb KaV5A- x Bp"]
 
+## Gets the value in the address ##
+[new getaddr x:r v:r = "Pb Vp=x Bp"]
+
+## Sets the value in the address ##
+[new movaddr v:r x:r = "Pb VpX! Bp"]
+[new setaddr v:r x:r = "Pb VpX! Bp"]
+
 ## Gets the input of a string
 # op1 = address
 # op2 = Maximum size
@@ -44,5 +53,48 @@
   "Pa Xp Sb$ 0+?(-7?(6!> B-b~* .!@@Ap SaB5"
 ]
 
-## Prints a string ##
-[new print s:r = "PaSp $ =1> ~* Ap"]
+## Prints an string ##
+[new print s:r = "PaSp $ =?(1>*@ Ap"]
+
+
+## Prints a number in output ##
+proc putn
+  alloc 32
+  setvar 0, 0
+  addr rd, 1
+
+  # Verify negative number
+  set rb, 0
+  dec rb
+  idiv rb, 2
+  dec rb
+
+  grt rc, rb
+  ifz
+    iout '-'
+    set rb, 0
+    sub rb, rc
+    mov rc, rb
+  endif
+
+  do
+    set rf, 0
+    set re, 10
+    grt re, rc
+    ifnz
+      idiv rc, 10
+      mov rf, ra
+      iadd rf, '0'
+      movaddr rd, rf
+      dec rd
+    endif
+
+    iequ rf, 0
+  whilenz
+
+  iadd rc, '0'
+  movaddr rd, rc
+  print rd
+
+  free 32
+endproc

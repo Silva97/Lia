@@ -1,5 +1,5 @@
-[import "modules/$/lia",
-        "modules/$/var"]
+[import "$/lia",
+        "$/var"]
 
 push 'f'
 push 'Z'

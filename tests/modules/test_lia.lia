@@ -1,4 +1,4 @@
-[import "modules/$/lia"]
+[import "$/lia"]
 
 set rc, 9
 set rd, 11

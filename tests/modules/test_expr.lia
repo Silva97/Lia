@@ -1,4 +1,4 @@
-[import "$/lia", "$/expr"]
+[import "$/lia", "expr"]
 
 mov rd, (15 + (55 - 5))
 out rd  # A

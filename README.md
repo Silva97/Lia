@@ -18,7 +18,7 @@ It is very easy to create new commands to Lia if you knowns Ases. But no problem
 The main module is 'lia', and you have some basic commands like thats:
 
 ```
-[import "lia"]
+[import "$/lia"]
 
 say "Please, input the 'r' character: "
 in rc

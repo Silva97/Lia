@@ -12,5 +12,6 @@
 #include "lia/procedure.h"
 #include "lia/compiler.h"
 #include "lia/target.h"
+#include "lia/action.h"
 
 #endif /* _LIA_H */

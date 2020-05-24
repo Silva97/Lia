@@ -29,6 +29,7 @@ metakeyword_t ismetakey(token_t *tk)
     [META_MACRO] = "macro",
     [META_REQUIRE] = "require",
     [META_IF] = "if",
+    [META_ACTION] = "action",
     [META_NONE] = NULL
   };
   

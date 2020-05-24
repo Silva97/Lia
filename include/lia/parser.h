@@ -29,6 +29,7 @@ token_t *meta_import(KEY_ARGS);
 token_t *meta_macro(KEY_ARGS);
 token_t *meta_require(KEY_ARGS);
 token_t *meta_if(KEY_ARGS);
+token_t *meta_action(KEY_ARGS);
 
 keyword_t iskey(token_t *tk);
 token_t *cmd_verify(KEY_ARGS);

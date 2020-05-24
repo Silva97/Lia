@@ -61,11 +61,27 @@ contexts:
     - match: \[\s*\bmacro\b
       scope: entity.name.lia
       push: macro
+    - match: \[\s*\bif\b
+      scope: entity.name.lia
+      push: if
+    - match: \[\s*\baction\b
+      scope: entity.name.lia
+      push: action
 
   import:
-    - include: string
+    - match: '"'
+      push: import_string
     - match: '\]'
       scope: entity.name.lia
+      pop: true
+
+  import_string:
+    - meta_scope: string.quoted.double.lia
+    - match: '\$'
+      scope: constant.character.escape.lia
+    - match: '\n'
+      scope: invalid.illegal.lia
+    - match: '"'
       pop: true
 
   new:
@@ -94,6 +110,25 @@ contexts:
     - match: '\]'
       scope: entity.name.lia
       pop: true
+
+  if:
+    - include: main
+    - match: '\bthen\b'
+      scope: entity.other.attribute-name.lia
+    - match: '==|!=|\bnot\b'
+      scope: keyword.operator.logical.lia
+    - match: '!{{tkid}}'
+      scope: constant.character.lia
+    - match: '\]'
+      scope: entity.name.lia
+      pop: true
+
+  action:
+    - meta_scope: constant.character.lia
+    - match: '\]'
+      scope: entity.name.lia
+      pop: true
+
 
   string:
     - match: '"'

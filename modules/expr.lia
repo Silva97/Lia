@@ -37,6 +37,17 @@
   getvar rc, var
 ]
 
+## Gets a negative value ##
+[macro expr('-' var: number) =
+  set rc, 0
+  isub rc, var
+]
+[macro expr('-' var: reg) =
+  set rb, 0
+  sub rb, var
+  mov rc, rb
+]
+
 ## Gets a character ##
 [macro expr(c: char) =
   set rc, c

@@ -128,10 +128,14 @@ int lia_compiler(FILE *output, lia_t *lia)
     this = lia->target->compile(output, this, lia);
     next = this->next;
 
-    if ( last == lia->instlist )
-      lia->instlist = this->next;
-    else
-      last->next = this->next;
+    if ( !next || next->type != INST_PROC ) {
+      if ( last == lia->instlist && last->type == INST_PROC )
+        lia->instlist = next;
+      else
+        last->next = next;
+
+      last = next;
+    }
 
     this->next = NULL;
   }

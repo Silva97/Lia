@@ -98,3 +98,51 @@ proc putn
 
   free 32
 endproc
+
+## Gets an string and converts to number ##
+proc readn
+  alloc 33
+  addr rc, 31
+  readline rc, 32
+
+  set rg, '+'
+  getaddr re, rc
+  iequ re, '-'
+  ifz
+    set rg, '-'
+    inc rc
+  endif
+
+  iequ re, '+'
+  ifz inc rc
+
+  set rd, 0
+  do
+    getaddr re, rc    
+    set ri, 0
+    mov rf, re
+    isub rf, '0'
+    igrt rf, 9
+
+    ifnz
+      imul rd, 10
+
+      isub re, '0'
+      iequ rg, '-'
+      ifz
+        set rf, 0
+        sub rf, re
+        mov re, rf
+      endif
+      add rd, re
+
+      inc rc
+      getaddr ri, rc
+    endif
+
+    iequ ri, 0
+  whilenz
+
+  free 33
+  ret rd
+endproc

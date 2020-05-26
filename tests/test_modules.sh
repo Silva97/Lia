@@ -36,10 +36,21 @@ function test_expr() {
   return
 }
 
+function test_io() {
+  local expects="2345 -5432"
+  local file=$(mktemp)
+
+  ./lia "$tdir/test_io.lia" -o $file
+  local output=$(echo -e "2345\n-5432" | $file)
+
+  assert_equ "$expects" "$output"
+}
+
 
 test_lia || exit 1
 test_var || exit 2
 test_expr || exit 3
+test_io || exit 4
 
 echo "Modules OK!"
 exit 0

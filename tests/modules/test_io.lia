@@ -1,0 +1,11 @@
+[import "$/lia", "$/var", "io"]
+
+call readn
+mov rc, ss
+call putn
+
+iout ' '
+
+call readn
+mov rc, ss
+call putn

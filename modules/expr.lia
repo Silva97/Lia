@@ -8,6 +8,8 @@
 # 'lia' and 'var' module.
 #####
 
+[require "$/lia"]
+
 ## Increment ##
 [macro expr(x: reg '+' '+') =
   mov rc, x
@@ -33,6 +35,17 @@
 ## Gets a variable value ##
 [macro expr('$' var: number) =
   getvar rc, var
+]
+
+## Gets a negative value ##
+[macro expr('-' var: number) =
+  set rc, 0
+  isub rc, var
+]
+[macro expr('-' var: reg) =
+  set rb, 0
+  sub rb, var
+  mov rc, rb
 ]
 
 ## Gets a character ##

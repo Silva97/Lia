@@ -10,6 +10,8 @@ install:
   - sudo make install
   - cd ..
 
-before_script: make
+before_script:
+  - make
+  - sudo make install
 
 script: bash runtests.sh

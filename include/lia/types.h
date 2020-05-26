@@ -11,6 +11,7 @@
 #define _LIA_TYPES_H
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <inttypes.h>
 #include "tree.h"
 
@@ -25,6 +26,10 @@
 
 /** The arguments of the keyword's function */
 #define KEY_ARGS  token_t *tk, imp_t *file, lia_t *lia
+
+/** Arguments to target's functions */
+#define ARGTARGET FILE *output, lia_t *lia
+#define ARGCOMPILE FILE *output, inst_t *inst, lia_t *lia
 
 
 /** Enumeration to token's type. */
@@ -101,6 +106,7 @@ typedef struct import {
   char filename[TKMAX];
   FILE *input;
 
+  bool stop;
   token_t *tklist; /**< The tokens' list */
 } imp_t;
 
@@ -191,6 +197,7 @@ typedef struct macro {
 
 /** A Lia's struct reserving all informations about a code */
 typedef struct lia {
+  struct target *target;
   proc_t *proctree;    /**< The procedures' tree */
   cmd_t *cmdtree;      /**< The commands' tree */
   imp_t *imptree;      /**< The imports' tree */
@@ -204,18 +211,35 @@ typedef struct lia {
   unsigned int errcount;
 } lia_t;
 
+/** Target to generates final code */
+typedef struct target {
+  int pretty;
+  const char *name;
+
+  /** Initializes the code */
+  void (*start)(ARGTARGET);
+  
+  /** Finalizes the code */
+  void (*end)(ARGTARGET);
+  
+  /** Compiles one instruction */
+  inst_t *(*compile)(ARGCOMPILE);
+} target_t;
+
 
 /** Meta-keywords */
 typedef enum metakeyword {
-  META_NONE,
   META_NEW,
   META_IMPORT,
-  META_MACRO
+  META_MACRO,
+  META_REQUIRE,
+  META_IF,
+  META_ACTION,
+  META_NONE       /**< Must be the final value */
 } metakeyword_t;
 
 /** Keywords */
 typedef enum keyword {
-  KEY_NONE,
   KEY_FUNC,
   KEY_LOAD,
   KEY_STORE,
@@ -225,11 +249,11 @@ typedef enum keyword {
   KEY_RET,
   KEY_PROC,
   KEY_ENDPROC,
-  KEY_PRTAB,
   KEY_IF,
   KEY_ENDIF,
   KEY_SAY,
-  KEY_ASES
+  KEY_ASES,
+  KEY_NONE,      /**< Must be the final value */
 } keyword_t;
 
 #endif /* _LIA_TYPES_H */

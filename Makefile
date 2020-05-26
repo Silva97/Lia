@@ -17,20 +17,23 @@ src2obj = $(subst .c,.o, \
 )
 
 SRC=$(wildcard src/tree.c src/hash.c src/filepath.c \
-	src/lia/*.c src/lia/meta/*.c)
+	src/lia/*.c src/lia/meta/*.c src/lia/target/*.c)
 OBJ=$(call src2obj,$(SRC))
 
 BIN=lia
 INSTPATH=/usr/local/bin
 
-all: starting $(OBJ) main.o
-	$(CC) $(CFLAGS) $(OBJ) $(OBJDIR)/main.o -o $(BIN)
+all: release
 
-debug: starting $(OBJ) main.o
-	$(CC) $(CFLAGS) -ggdb $(OBJ) $(OBJDIR)/main.o -o $(BIN)
+debug: CFLAGS += -ggdb
+debug: all
+
+release: starting $(OBJ) main.o
+	$(CC) $(CFLAGS) $(OBJ) $(OBJDIR)/main.o -o $(BIN)
 
 starting:
 	mkdir -p obj/lia/meta
+	mkdir -p obj/lia/target
 
 main.o: src/main.c
 	$(CC) $(CFLAGS) -c $< -o $(OBJDIR)/$@
@@ -45,6 +48,7 @@ doc:
 	doxygen
 
 install:
+	rm -rf ~/.lia
 	mkdir -p ~/.lia
 	cp $(BIN) $(INSTPATH)/
 	cp -r modules ~/.lia/

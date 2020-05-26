@@ -23,12 +23,20 @@ metakeyword_t ismetakey(token_t *tk)
   if (tk->type != TK_ID)
     return META_NONE;
   
-  if ( !strcmp(tk->text, "new") )
-    return META_NEW;
-  if ( !strcmp(tk->text, "import") )
-    return META_IMPORT;
-  if ( !strcmp(tk->text, "macro") )
-    return META_MACRO;
+  const char *list[] = {
+    [META_NEW] = "new",
+    [META_IMPORT] = "import",
+    [META_MACRO] = "macro",
+    [META_REQUIRE] = "require",
+    [META_IF] = "if",
+    [META_ACTION] = "action",
+    [META_NONE] = NULL
+  };
+  
+  for (int i = 0; list[i]; i++) {
+    if ( !strcmp(list[i], tk->text) )
+      return i;
+  }
   
   return META_NONE;
 }
@@ -95,4 +103,30 @@ mtk_t *macro_tkseq_add(mtk_t *list, token_type_t type, char *name)
   list->next->type = type;
   list->next->name = name;
   return list->next;
+}
+
+/**
+ * @brief Replaces an char to an string.
+ * 
+ * @param dest         The buffer to writes new string
+ * @param src          The initial source string
+ * @param placeholder  The char to replaces
+ * @param new          The new string to replaces the char
+ */
+void chrrep(char *dest, char *src, int placeholder, const char *new)
+{
+  size_t size = strlen(new);
+
+  while (*src) {
+    if (*src != placeholder) {
+      *dest++ = *src++;
+      continue;
+    }
+
+    memcpy(dest, new, size);
+    dest += size;
+    src++;
+  }
+
+  *dest = '\0';
 }

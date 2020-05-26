@@ -9,6 +9,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <stdarg.h>
 #include <string.h>
 #include "lia/lia.h"
@@ -85,6 +86,48 @@ inst_t *inst_add(inst_t *list, inst_type_t type)
 }
 
 /**
+ * @brief Sets the value of a macro with one token
+ * 
+ * @param tree       The macro's tree
+ * @param type       The type of the token
+ * @return token_t*  The macro's token at body
+ */
+token_t *macro_set(macro_t *tree, char *name, token_type_t type)
+{
+  unsigned long int empty = INITIAL_HASH;
+  macro_t *macro = tree_find(tree, hash(name));
+  if ( !macro ) {
+    macro = tree_insert(tree, sizeof *macro, hash(name));
+    macro->name = name;
+    macro->variants = calloc(1, sizeof (macro_var_t));
+  }
+
+  macro_var_t *var = tree_find(macro->variants, empty);
+  if ( !var )
+    var = tree_insert(macro->variants, sizeof *var, empty);
+  
+  if ( !var->body )
+    var->body = calloc(1, sizeof (token_t));
+  
+  var->body->type = type;
+  return var->body;
+}
+
+/**
+ * @brief Sets a macro string
+ * 
+ * @param tree   The macro's tree
+ * @param name   The macro's name
+ * @param value  The string to the body
+ */
+void macrostr_set(macro_t *tree, char *name, const char *value)
+{
+  token_t *tk = macro_set(tree, name, TK_STRING);
+  strcpy(tk->text, value);
+}
+
+
+/**
  * @brief Analyzes the syntax of the Lia code
  * 
  * @param lia     The Lia struct
@@ -103,8 +146,12 @@ int lia_parser(lia_t *lia, imp_t *file)
     lia->macrotree = calloc(1, sizeof (macro_t));
   if ( !lia->instlist )
     lia->instlist = calloc(1, sizeof (inst_t));
+  
+  /* Declaring initial macros */
+  if (lia->target)
+    macrostr_set(lia->macrotree, "TARGET", lia->target->name);
 
-  while (this && this->type != TK_EOF) {
+  while (this && this->type != TK_EOF && !file->stop) {
     this = inst_parser(lia, file, this);
   }
 
@@ -121,7 +168,10 @@ token_t *inst_parser(lia_t *lia, imp_t *file, token_t *this)
   token_t *( *metakeys[] )(KEY_ARGS) = {
     [META_NEW] = meta_new,
     [META_IMPORT] = meta_import,
-    [META_MACRO] = meta_macro
+    [META_MACRO] = meta_macro,
+    [META_REQUIRE] = meta_require,
+    [META_IF] = meta_if,
+    [META_ACTION] = meta_action
   };
 
   token_t *( *keys[] )(KEY_ARGS) = {

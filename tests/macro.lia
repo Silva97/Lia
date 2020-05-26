@@ -1,4 +1,4 @@
-[import "modules/lia"]
+[import "modules/ases/lia"]
 
 [macro test(abc: str ',' def: number) =
   say abc

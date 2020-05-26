@@ -17,14 +17,21 @@
     "%s/.lia/modules", getenv("HOME"))
 #endif
 
+int settarget(target_t *target, char *name);
 void show_help(void);
 
 int main(int argc, char **argv)
 {
   char defmod[513];
   int opt;
-  bool pretty = false;
   char *outname = DEF_OUT;
+  target_t target = {
+    .pretty = false,
+    .name = "ases",
+    .start = target_ases_start,
+    .end = target_ases_end,
+    .compile = target_ases_compile
+  };
   
   if (argc <= 1) {
     puts(
@@ -36,12 +43,13 @@ int main(int argc, char **argv)
   
   lia_t *lia = calloc(1, sizeof *lia);
   lia->pathlist = calloc( 1, sizeof (path_t) );
+  lia->target = &target;
 
 
   GETMOD(defmod);
   path_insert(lia->pathlist, defmod);
 
-  while ( (opt = getopt(argc, argv, "I:o:ph")) > 0 ) {
+  while ( (opt = getopt(argc, argv, "I:o:t:ph")) > 0 ) {
     switch (opt) {
     case 'I':
       path_insert(lia->pathlist, optarg);
@@ -49,8 +57,14 @@ int main(int argc, char **argv)
     case 'o':
       outname = optarg;
       break;
+    case 't':
+      if ( !settarget(&target, optarg) ) {
+        fprintf(stderr, "Target '%s' is invalid! See help: lia -h\n", optarg);
+        return EXIT_FAILURE;
+      }
+      break;
     case 'p':
-      pretty = true;
+      target.pretty = true;
       break;
     case 'h':
     case '?':
@@ -100,7 +114,7 @@ int main(int argc, char **argv)
     return EXIT_FAILURE;
   }
 
-  if ( lia_compiler(output, lia, pretty) ) {
+  if ( lia_compiler(output, lia) ) {
     if (output != stdout) {
       fclose(output);
       remove(outname);
@@ -116,6 +130,38 @@ int main(int argc, char **argv)
 }
 
 
+int settarget(target_t *target, char *name)
+{
+  static const char *list[] = {
+    "ases",
+    NULL
+  };
+
+  static void (*liststart[])() = {
+    target_ases_start
+  };
+
+  static void (*listend[])() = {
+    target_ases_end
+  };
+
+  static inst_t *(*listcompile[])() = {
+    target_ases_compile
+  };
+
+  for (int i = 0; list[i]; i++) {
+    if ( !strcmp(list[i], name) ) {
+      target->start = liststart[i];
+      target->end = listend[i];
+      target->compile = listcompile[i];
+      target->name = list[i];
+      return true;
+    }
+  }
+
+  return false;
+}
+
 void show_help(void)
 {
   puts(
@@ -126,8 +172,12 @@ void show_help(void)
     "Usage: lia [options] source1.lia source2.lia ...\n"
     "  -o     Specify the output name. (Default: \"" DEF_OUT "\")\n"
     "  -p     (pretty) If specified, adds comments to the output code.\n"
+    "  -t     Specifies the output target.\n"
     "  -I     Define a path to search files in import. It's possible\n"
     "         use multiple times to set more paths.\n"
-    "  -h     Show this help message."
+    "  -h     Show this help message.\n\n"
+
+    "TARGETS\n"
+    "  At this moment, only 'ases' target is supported."
   );
 }

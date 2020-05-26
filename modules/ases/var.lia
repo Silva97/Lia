@@ -1,0 +1,148 @@
+#####
+# Developed by Luiz Felipe <felipe.silva337@yahoo.com>
+# Date: 2020-05-05
+# GitHub: https://github.com/Silva97
+# Distributed under the MIT License.
+#
+# This module declares commands to create stack frame and use
+# variables in it.
+#####
+
+[require "$/lia"]
+
+##
+# Allocate X spaces to use at variables
+# This use K register to preserve the start address of the stack frame.
+##
+[new alloc x:i = "K!> PaXb4Ap k"]
+
+## Free X spaces reserved by alloc ##
+[new free x:i = "KaXb5Ap <=k"]
+
+## Gets the value of a variable in the stack frame ##
+[new getvar  x:r v:i = "Pb KaV5A-p =x Bp"]
+
+## Sets the value of a variable ##
+[new movvar v:i x:r = "Pb KaV5A-p X! Bp"]
+[new setvar v:i x:i = "Pb KaV5A-p X! Bp"]
+
+## Prints the value of a variable ##
+[new outvar v:i = "Pb KaV5A-p =1 Bp"]
+
+## Gets the input and set the variable ##
+[new invar v:i = "Pb KaV5A-p 0! Bp"]
+
+## Gets the variable address ##
+[new addr x:r v:i = "Pb KaV5A- x Bp"]
+
+## Gets the value in the address ##
+[new getaddr x:r v:r = "Pb Vp=x Bp"]
+
+## Sets the value in the address ##
+[new movaddr v:r x:r = "Pb VpX! Bp"]
+[new setaddr v:r x:r = "Pb VpX! Bp"]
+
+## Gets the input of a string
+# op1 = address
+# op2 = Maximum size
+#
+# Returns in ra the size of the string.
+# The strings have null terminator.
+##
+[new readline x:r s:i =
+  "Pa Xp Sb$ 0+?(-7?(6!> B-b~* .!@@Ap SaB5"
+]
+
+## Prints an string ##
+[new print s:r = "PaSp $ =?(1>*@ Ap"]
+
+
+## Prints a number in output ##
+proc putn
+  alloc 32
+  setvar 0, 0
+  addr rd, 1
+
+  # Verify negative number
+  set rb, 0
+  dec rb
+  idiv rb, 2
+  dec rb
+
+  grt rc, rb
+  ifz
+    iout '-'
+    set rb, 0
+    sub rb, rc
+    mov rc, rb
+  endif
+
+  do
+    set rf, 0
+    set re, 10
+    grt re, rc
+    ifnz
+      idiv rc, 10
+      mov rf, ra
+      iadd rf, '0'
+      movaddr rd, rf
+      dec rd
+    endif
+
+    iequ rf, 0
+  whilenz
+
+  iadd rc, '0'
+  movaddr rd, rc
+  print rd
+
+  free 32
+endproc
+
+## Gets an string and converts to number ##
+proc readn
+  alloc 33
+  addr rc, 31
+  readline rc, 32
+
+  set rg, '+'
+  getaddr re, rc
+  iequ re, '-'
+  ifz
+    set rg, '-'
+    inc rc
+  endif
+
+  iequ re, '+'
+  ifz inc rc
+
+  set rd, 0
+  do
+    getaddr re, rc    
+    set ri, 0
+    mov rf, re
+    isub rf, '0'
+    igrt rf, 9
+
+    ifnz
+      imul rd, 10
+
+      isub re, '0'
+      iequ rg, '-'
+      ifz
+        set rf, 0
+        sub rf, re
+        mov re, rf
+      endif
+      add rd, re
+
+      inc rc
+      getaddr ri, rc
+    endif
+
+    iequ ri, 0
+  whilenz
+
+  free 33
+  ret rd
+endproc

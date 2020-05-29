@@ -14,10 +14,10 @@
 # Allocate X spaces to use at variables
 # This use K register to preserve the start address of the stack frame.
 ##
-[new alloc x:i = "K!> PaXb4Ap k"]
+[new alloc x:i = "K!> PaX4Ap k"]
 
 ## Free X spaces reserved by alloc ##
-[new free x:i = "KaXb5Ap <=k"]
+[new free x:i = "KaX5Ap <=k"]
 
 ## Gets the value of a variable in the stack frame ##
 [new getvar  x:r v:i = "Pb KaV5A-p =x Bp"]
@@ -40,7 +40,7 @@
 
 ## Sets the value in the address ##
 [new movaddr v:r x:r = "Pb VpX! Bp"]
-[new setaddr v:r x:r = "Pb VpX! Bp"]
+[new setaddr v:r x:i = "Pb VpX! Bp"]
 
 ## Gets the input of a string
 # op1 = address
